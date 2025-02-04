@@ -1059,3 +1059,15 @@ input:valid {
     z-index: 1999;
     animation: fadeIn 0.3s ease-out;
 }
+
+.auth-link {
+    margin-top: 1.5rem;
+    text-align: center;
+    color: #666;
+}
+
+.auth-link a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+}
