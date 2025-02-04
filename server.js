@@ -13,7 +13,7 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('./'));
 
 // Connect to MongoDB
 console.log('Attempting to connect to MongoDB...');

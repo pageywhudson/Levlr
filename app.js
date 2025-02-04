@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 });
 
 // Static files
-app.use(express.static('public'));
+app.use(express.static('./'));
 
 // Routes
 app.use('/api/auth', authRoutes);
