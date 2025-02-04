@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Levlr - Goals</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="authService.js"></script>
+    <script src="goals.js" defer></script>
+</head>
+<body>
+    <div class="goals-container">
+        <header class="dashboard-header">
+            <a href="dashboard.html" class="back-button">←</a>
+            <h1 class="page-title">Goals</h1>
+            <div class="header-spacer"></div>
+        </header>
+
+        <div class="goals-content">
+            <div class="add-goal-section">
+                <button class="add-goal-button">+ Add New Goal</button>
+            </div>
+
+            <div class="goals-list">
+                <!-- Goals will be inserted here -->
+            </div>
+
+            <!-- Add Goal Modal -->
+            <div class="modal" id="addGoalModal">
+                <div class="modal-content">
+                    <h2>Set New Goal</h2>
+                    <form id="goalForm">
+                        <div class="form-group">
+                            <label for="exercise">Exercise</label>
+                            <select id="exercise" required>
+                                <option value="">Select an exercise</option>
+                                <!-- Exercise options will be populated by JS -->
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="goalType">Goal Type</label>
+                            <select id="goalType" required>
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="targetValue">Target</label>
+                            <div class="target-input">
+                                <input type="number" id="targetValue" required min="1" step="0.1">
+                                <select id="targetMetric" required>
+                                    <!-- Options will be populated by JavaScript -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="cancel-btn">Cancel</button>
+                            <button type="submit" class="save-btn">Save Goal</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

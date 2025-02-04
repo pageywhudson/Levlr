@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Levlr - Settings</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="preferences.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="authService.js"></script>
+    <script src="preferences.js" defer></script>
+</head>
+<body>
+    <div class="settings-container">
+        <header class="settings-header">
+            <a href="dashboard.html" class="back-arrow">←</a>
+            <div class="header-content">
+                <h1>Settings</h1>
+                <p class="section-title">Units & Measurements</p>
+            </div>
+        </header>
+
+        <section class="settings-section">
+            <h2>Units</h2>
+            
+            <div class="settings-list">
+                <div class="settings-item">
+                    <div class="item-left">
+                        <span class="item-icon">⚖️</span>
+                        <span class="item-label">Weight Unit</span>
+                    </div>
+                    <div class="toggle-group">
+                        <button type="button" class="toggle-btn active" data-unit="kg">kg</button>
+                        <button type="button" class="toggle-btn" data-unit="lbs">lbs</button>
+                    </div>
+                </div>
+
+                <div class="settings-item">
+                    <div class="item-left">
+                        <span class="item-icon">📏</span>
+                        <span class="item-label">Distance Unit</span>
+                    </div>
+                    <div class="toggle-group">
+                        <button type="button" class="toggle-btn active" data-unit="km">km</button>
+                        <button type="button" class="toggle-btn" data-unit="mi">mi</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="settings-section">
+            <h2>Body Weight</h2>
+            
+            <div class="settings-list">
+                <div class="settings-item">
+                    <div class="item-left">
+                        <span class="item-icon">🏋️</span>
+                        <span class="item-label">Current Weight</span>
+                    </div>
+                    <div class="weight-input">
+                        <input type="number" id="bodyWeight" step="0.1" min="20" max="300">
+                        <span class="weight-unit">kg</span>
+                    </div>
+                </div>
+            </div>
+            <p class="helper-text">Used to calculate exercise difficulty and XP gains</p>
+        </section>
+
+        <button class="save-btn">Save Changes</button>
+    </div>
+</body>
+</html> 

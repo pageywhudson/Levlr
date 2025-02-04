@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Levlr - Workout History</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f5f6f8;
+            font-family: 'Inter', sans-serif;
+        }
+        .history-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .workout-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .history-filters {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="authService.js"></script>
+    <script src="workoutHistory.js" defer></script>
+</head>
+<body>
+    <div class="history-container">
+        <header class="dashboard-header">
+            <a href="dashboard.html" class="back-button">←</a>
+            <h1 class="page-title">Workout History</h1>
+            <div class="header-spacer"></div>
+        </header>
+
+        <div class="history-filters">
+            <div class="filter-group">
+                <label>Exercise Type</label>
+                <select id="type-filter">
+                    <option value="all">All Types</option>
+                    <option value="weightlifting">Weightlifting</option>
+                    <option value="bodyweight">Bodyweight</option>
+                    <option value="cardio">Cardio</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Time Period</label>
+                <select id="time-filter">
+                    <option value="week">Past Week</option>
+                    <option value="month">Past Month</option>
+                    <option value="all">All Time</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="history-list" style="background: transparent;">
+            <!-- Workouts will be inserted here -->
+        </div>
+    </div>
+</body>
+</html> 

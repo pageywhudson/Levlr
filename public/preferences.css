@@ -1,0 +1,384 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Navigation */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: white;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    z-index: 10;
+}
+
+.back-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #333;
+    background: #f5f6f8;
+    border-radius: 50%;
+    font-size: 20px;
+}
+
+.top-nav h1 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* Container */
+.container {
+    padding: 76px 16px 90px 16px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Card */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 24px;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 500;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Button Groups */
+.button-group {
+    display: flex;
+    gap: 8px;
+}
+
+.unit-btn {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #e9ecef;
+    background: white;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.unit-btn.active {
+    background: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+/* Input Groups */
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.input-group input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 16px;
+    -webkit-appearance: none;
+}
+
+.input-group .unit {
+    color: #666;
+    font-size: 15px;
+    padding: 0 8px;
+}
+
+.helper-text {
+    margin-top: 8px;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Save Button */
+.save-btn {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    padding: 16px;
+    background: #6b46c1;
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(107, 70, 193, 0.2);
+    z-index: 10;
+    max-width: 600px;
+    margin: 0 auto;
+    transition: background-color 0.2s ease;
+}
+
+.save-btn:hover {
+    background: #553c9a;
+}
+
+/* Success Message */
+.success-message {
+    position: fixed;
+    bottom: 80px;
+    left: 16px;
+    right: 16px;
+    background: #4caf50;
+    color: white;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: opacity 0.3s ease;
+    z-index: 20;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.success-message.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Center save button and success message when screen is wide enough */
+@media (min-width: 632px) {
+    .save-btn,
+    .success-message {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+/* Settings container */
+.settings-container {
+    padding: 24px 16px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Header styles */
+.settings-header {
+    margin-bottom: 32px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.back-arrow {
+    text-decoration: none;
+    color: #333;
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: background-color 0.2s ease;
+}
+
+.back-arrow:hover {
+    background-color: #f8f9fa;
+}
+
+.header-content {
+    flex: 1;
+}
+
+.header-content h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #6b46c1;
+    margin-bottom: 8px;
+}
+
+/* Remove the old h1 styles */
+.settings-header > h1 {
+    display: none;
+}
+
+.section-title {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Section styles */
+.settings-section {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.settings-section h2 {
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 16px;
+    padding: 0 8px;
+}
+
+/* Settings list styles */
+.settings-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 8px;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.2s ease;
+}
+
+.settings-item:not(:last-child) {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.item-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.item-icon {
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
+}
+
+.item-label {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.chevron {
+    color: #ccc;
+    font-size: 20px;
+}
+
+/* Toggle Group */
+.toggle-group {
+    display: flex;
+    gap: 4px;
+}
+
+.toggle-btn {
+    padding: 8px 16px;
+    border: 1px solid #e9ecef;
+    background: white;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.toggle-btn.active {
+    background: #6b46c1;
+    color: white;
+    border-color: #6b46c1;
+}
+
+/* Weight Input */
+.weight-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.weight-input input {
+    width: 80px;
+    padding: 8px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: right;
+    -webkit-appearance: none;
+}
+
+.weight-unit {
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+    width: 30px;
+}
+
+.helper-text {
+    font-size: 14px;
+    color: #666;
+    margin-top: 12px;
+    padding: 0 8px;
+}
+
+/* Remove the deactivate button styles if not needed */
+
+/* Error Message */
+.error-message {
+    position: fixed;
+    bottom: 80px;
+    left: 16px;
+    right: 16px;
+    background: #dc2626;
+    color: white;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+    transition: opacity 0.3s ease;
+    z-index: 20;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+@media (min-width: 632px) {
+    .error-message {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+} 

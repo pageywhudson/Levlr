@@ -1,0 +1,675 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #f5f6f8;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+}
+
+/* Container styles */
+.preferences-container {
+    width: 100%;
+    min-height: 100vh;
+    background: #f5f6f8;
+    padding-top: 60px;
+}
+
+/* Header styles */
+.dashboard-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: white;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+.back-button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #333;
+    background: #f5f6f8;
+    border-radius: 50%;
+    font-size: 20px;
+}
+
+.page-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Form section styles */
+.preference-section {
+    padding: 16px;
+    margin-bottom: 80px; /* Space for fixed button */
+}
+
+/* Card container */
+.preferences-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 500;
+    color: #333;
+    font-size: 16px;
+}
+
+/* Toggle container styles */
+.toggle-container {
+    display: flex;
+    gap: 8px;
+}
+
+.unit-button {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #e9ecef;
+    background: white;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.unit-button.active {
+    background: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+/* Weight input styles */
+.weight-input-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.weight-input-container input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 16px;
+    -webkit-appearance: none;
+}
+
+.weight-unit {
+    color: #666;
+    font-size: 15px;
+    padding: 0 8px;
+}
+
+.help-text {
+    margin-top: 8px;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Submit button styles */
+.submit-button {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    padding: 16px;
+    background: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+/* Feedback message */
+.save-feedback {
+    position: fixed;
+    bottom: 80px;
+    left: 16px;
+    right: 16px;
+    background: #4caf50;
+    color: white;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: opacity 0.3s ease;
+    z-index: 100;
+}
+
+.save-feedback.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Style links that are buttons to look like regular buttons */
+a.action-button {
+    text-decoration: none;  /* Remove underline */
+    display: inline-flex;   /* Keep the flex layout */
+    align-items: center;    /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+    cursor: pointer;
+    color: inherit;         /* Use the same color as other buttons */
+}
+
+/* Make sure the action-button class maintains consistent styling */
+.action-button {
+    background: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.action-button:hover {
+    background: #f3f4f6;
+}
+
+.streak-notification {
+    background: linear-gradient(135deg, #4a90e2, #357abd);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+}
+
+.streak-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.streak-icon {
+    font-size: 1.2em;
+}
+
+.streak-text {
+    font-weight: 600;
+}
+
+.streak-bonus {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.streak-notification.show {
+    animation: bounce 0.3s ease;
+}
+
+.exercise-info {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 10px 0;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.exercise-info.hidden {
+    display: none;
+}
+
+.exercise-description {
+    margin-bottom: 12px;
+    color: #495057;
+    line-height: 1.5;
+}
+
+.form-tips {
+    margin-top: 12px;
+}
+
+.form-tips h4 {
+    color: #212529;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+.tip-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tip-list li {
+    padding: 4px 0 4px 24px;
+    position: relative;
+    font-size: 0.9em;
+    color: #495057;
+}
+
+.tip-list li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #4a90e2;
+}
+
+.difficulty-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: 500;
+    margin-top: 12px;
+}
+
+.difficulty-badge.beginner {
+    background: #d4edda;
+    color: #155724;
+}
+
+.difficulty-badge.intermediate {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.difficulty-badge.advanced {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.search-container {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e9ecef;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.search-container input:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.no-results {
+    color: #6c757d;
+    font-style: italic;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.weight-input-group {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+.workout-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.workout-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.workout-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.workout-type {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.workout-type.weightlifting {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.set-list {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.set-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.set-item:last-child {
+    border-bottom: none;
+}
+
+.workout-notes {
+    margin: 20px 0 0 0;
+    padding: 20px 0 0 0;
+    border-top: 1px solid #f0f0f0;
+    color: #666;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.no-workouts {
+    background: #ffffff !important;
+    padding: 24px;
+    border-radius: 20px;
+    text-align: center;
+    color: #666;
+    margin-top: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+/* Preferences Page Styles */
+.preference-section {
+    margin-top: 80px; /* Account for fixed header */
+    padding: 16px;
+}
+
+.preference-section h2 {
+    margin: 0 0 20px 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.preference-group {
+    margin-bottom: 20px;
+}
+
+.preference-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: #666;
+}
+
+.preference-options {
+    display: flex;
+    gap: 10px;
+}
+
+.preference-button {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #e9ecef;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.preference-button.active {
+    background: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+.success-feedback {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #4caf50;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    animation: fadeIn 0.3s ease;
+    z-index: 1000;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, 20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.history-filters {
+    display: flex;
+    gap: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 32px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.filter-group {
+    flex: 1;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.filter-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
+    cursor: pointer;
+}
+
+/* Container styles */
+.preferences-container {
+    width: 100%;
+    min-height: 100vh;
+    background: #f5f6f8;
+}
+
+/* Header styles */
+.dashboard-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: white;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.back-button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #333;
+    background: #f5f6f8;
+    border-radius: 50%;
+    font-size: 20px;
+}
+
+.page-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Form section styles */
+.preference-section {
+    padding: 80px 16px 100px 16px; /* Top padding for header, bottom for button */
+}
+
+/* Form group styles */
+.form-group {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 500;
+    color: #333;
+    font-size: 16px;
+}
+
+/* Toggle container styles */
+.toggle-container {
+    display: flex;
+    gap: 8px;
+}
+
+.unit-button {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #e9ecef;
+    background: white;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.unit-button.active {
+    background: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+/* Weight input styles */
+.weight-input-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.weight-input-container input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 16px;
+    -webkit-appearance: none;
+}
+
+.weight-unit {
+    color: #666;
+    font-size: 15px;
+    padding: 0 8px;
+}
+
+.help-text {
+    margin-top: 8px;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Submit button styles */
+.submit-button {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    padding: 16px;
+    background: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+/* Feedback message */
+.save-feedback {
+    position: fixed;
+    bottom: 80px;
+    left: 16px;
+    right: 16px;
+    background: #4caf50;
+    color: white;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: opacity 0.3s ease;
+    z-index: 100;
+}
+
+.save-feedback.hidden {
+    opacity: 0;
+    pointer-events: none;
+} 
