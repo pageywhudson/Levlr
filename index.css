@@ -803,9 +803,9 @@ input:valid {
 
 /* Goals Page Styles */
 .goals-container {
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
+    padding-top: 60px;  /* Height of the header */
+    height: 100vh;
+    overflow-y: auto;
 }
 
 .add-goal-section {
@@ -884,7 +884,7 @@ input:valid {
     background: rgba(0,0,0,0.5);
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 200;
 }
 
 .modal-content {
@@ -1103,4 +1103,65 @@ input:valid {
         transform: translate(-50%, 0);
         opacity: 1;
     }
+}
+
+/* Fixed header styles */
+.goals-container {
+    padding-top: 60px;  /* Height of the header */
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.dashboard-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: white;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.goals-content {
+    padding: 16px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Adjust modal to appear above fixed header */
+.modal {
+    z-index: 200;
+}
+
+/* Fixed header styles for both goals and workout history */
+.goals-container,
+.history-container {
+    padding-top: 60px;  /* Height of the header */
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.dashboard-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: white;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.goals-content,
+.history-content {
+    padding: 16px;
+    max-width: 800px;
+    margin: 0 auto;
 }

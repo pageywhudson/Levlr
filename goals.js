@@ -19,16 +19,87 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load exercises from workout.js
     const exercises = {
         weightlifting: {
-            popular: ['Bench Press', 'Squat', 'Deadlift'],
-            other: ['Shoulder Press', 'Barbell Row']
+            popular: [
+                'Bench Press',
+                'Squat',
+                'Deadlift',
+                'Overhead Press',
+                'Barbell Row'
+            ],
+            other: [
+                'Dumbbell Bench Press',
+                'Romanian Deadlift',
+                'Leg Press',
+                'Incline Bench Press',
+                'Dumbbell Shoulder Press',
+                'Bent Over Row',
+                'T-Bar Row',
+                'Front Squat',
+                'Hack Squat',
+                'Lunges',
+                'Dumbbell Lunges',
+                'Leg Extensions',
+                'Leg Curls',
+                'Calf Raises',
+                'Tricep Extensions',
+                'Bicep Curls',
+                'Hammer Curls',
+                'Lateral Raises',
+                'Face Pulls',
+                'Shrugs'
+            ]
         },
         bodyweight: {
-            popular: ['Push-ups', 'Pull-ups', 'Dips'],
-            other: ['Squats', 'Lunges']
+            popular: [
+                'Push-ups',
+                'Pull-ups',
+                'Chin-ups',
+                'Dips',
+                'Squats'
+            ],
+            other: [
+                'Inverted Rows',
+                'Pike Push-ups',
+                'Diamond Push-ups',
+                'Wide Push-ups',
+                'Decline Push-ups',
+                'Australian Pull-ups',
+                'Negative Pull-ups',
+                'Assisted Pull-ups',
+                'Pistol Squats',
+                'Jump Squats',
+                'Lunges',
+                'Mountain Climbers',
+                'Burpees',
+                'Plank',
+                'Side Plank',
+                'L-Sits',
+                'Hanging Leg Raises',
+                'Russian Twists',
+                'Bicycle Crunches',
+                'Superman Holds'
+            ]
         },
         cardio: {
-            popular: ['Running', 'Cycling', 'Swimming'],
-            other: ['Walking', 'Rowing']
+            popular: [
+                'Running',
+                'Cycling',
+                'Swimming',
+                'Rowing',
+                'Jump Rope'
+            ],
+            other: [
+                'Walking',
+                'Elliptical',
+                'Stair Climber',
+                'Hiking',
+                'Boxing',
+                'Dancing',
+                'HIIT',
+                'Cross Trainer',
+                'Battle Ropes',
+                'Jumping Jacks'
+            ]
         }
     };
 

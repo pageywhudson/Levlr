@@ -110,6 +110,13 @@ document.addEventListener('DOMContentLoaded', function() {
         return; // initializeUserData will handle the redirect if needed
     }
 
+    // Get the exercise form
+    const exerciseForm = document.querySelector('.exercise-form');
+    if (!exerciseForm) {
+        console.error('Exercise form not found!');
+        return;
+    }
+
     // Add constants after user data is initialized
     const KG_TO_LBS = 2.20462;
     const LBS_TO_KG = 0.453592;
@@ -159,7 +166,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const typeButtons = document.querySelectorAll('.type-button');
     const exerciseSelect = document.getElementById('exercise');
     const formContainer = document.querySelector('.exercise-form-container');
-    const exerciseForm = document.querySelector('.exercise-form');
     const searchInput = document.getElementById('exercise-search');
     
     // Exercise lists by type
@@ -870,21 +876,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Add this at the top of your file, after DOMContentLoaded
-    const exerciseForm = document.querySelector('.exercise-form');
-    if (!exerciseForm) {
-        console.error('Exercise form not found!');
-    }
-
-    // Add a basic console log to verify the form submission is being triggered
+    // Form submission handler
     exerciseForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-        console.log('Form submitted!');  // Add this line
+        console.log('Form submitted!');
         
         try {
             const exerciseSelect = document.getElementById('exercise');
             const selectedExercise = exerciseSelect.value;
-            console.log('Selected exercise:', selectedExercise);  // Add this line
+            console.log('Selected exercise:', selectedExercise);
             const notes = document.getElementById('notes').value;
             
             // Collect all sets data
