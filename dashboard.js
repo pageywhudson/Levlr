@@ -167,4 +167,38 @@ function calculateGoalProgress(goal) {
         console.error('Error calculating progress:', error, goal);
         return 0;
     }
+}
+
+// Update goals progress
+function updateGoalsProgress() {
+    const goals = JSON.parse(localStorage.getItem('workoutGoals')) || [];
+    const workouts = JSON.parse(localStorage.getItem('workoutHistory')) || [];
+    
+    goals.forEach(goal => {
+        // Reset progress
+        goal.progress = 0;
+        
+        // Calculate progress from all relevant workouts
+        workouts.forEach(workout => {
+            workout.exercises.forEach(exercise => {
+                if (exercise.name === goal.exercise) {
+                    goal.progress += exercise.sets.reduce((total, set) => total + set.reps, 0);
+                }
+            });
+        });
+        
+        // Update progress display
+        const goalElement = document.querySelector(`[data-goal-id="${goal.id}"]`);
+        if (goalElement) {
+            const progressBar = goalElement.querySelector('.goal-progress-bar');
+            const progressText = goalElement.querySelector('.goal-progress-text');
+            const percentage = Math.min((goal.progress / goal.target) * 100, 100);
+            
+            progressBar.style.width = `${percentage}%`;
+            progressText.textContent = `${goal.progress}/${goal.target} ${goal.unit}`;
+        }
+    });
+    
+    // Save updated goals
+    localStorage.setItem('workoutGoals', JSON.stringify(goals));
 } 

@@ -13,8 +13,26 @@ document.addEventListener('DOMContentLoaded', async function() {
     const timeFilter = document.getElementById('time-filter');
 
     // Get workout history from localStorage
-    function getWorkoutHistory() {
-        return JSON.parse(localStorage.getItem('workoutHistory')) || [];
+    async function getWorkoutHistory() {
+        try {
+            const response = await fetch(`${authService.baseUrl}/workouts`, {
+                headers: {
+                    'Authorization': `Bearer ${authService.getToken()}`,
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch workout history');
+            }
+
+            const workouts = await response.json();
+            console.log('Fetched workouts from API:', workouts);
+            return workouts;
+        } catch (error) {
+            console.error('Error fetching workout history:', error);
+            return [];
+        }
     }
 
     // Format date for display
@@ -59,6 +77,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Render workout history
     async function renderWorkoutHistory() {
         const workouts = await getWorkoutHistory();
+        // Sort workouts by date, most recent first
+        workouts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         const filteredWorkouts = filterWorkouts(workouts);
         
         if (filteredWorkouts.length === 0) {
@@ -86,25 +106,27 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     function renderWorkout(workout) {
-        // Return HTML string instead of creating DOM element
+        // Handle the new data structure from MongoDB
+        const exercises = workout.exercises || [];
         return `
             <div class="workout-card">
-                <div class="workout-header">
-                    <h3>${toTitleCase(workout.exercise)}</h3>
-                </div>
-                <div class="sets-container">
-                    ${workout.sets.map((set, index) => `
-                        <div class="set-row">
-                            <span>Set ${index + 1}: ${
-                                // Only include weight if it exists
-                                set.weight?.value 
-                                    ? `${set.weight.value}${set.weight.unit} × ` 
-                                    : ''
-                            }${set.reps} reps</span>
-                            <span class="set-xp">+${set.xp} XP</span>
-                        </div>
-                    `).join('')}
-                </div>
+                ${exercises.map(exercise => `
+                    <div class="workout-header">
+                        <h3>${toTitleCase(exercise.name)}</h3>
+                    </div>
+                    <div class="sets-container">
+                        ${exercise.sets.map((set, index) => `
+                            <div class="set-row">
+                                <span>Set ${index + 1}: ${
+                                    set.weight?.value 
+                                        ? `${set.weight.value}${set.weight.unit} × ` 
+                                        : ''
+                                }${set.reps} reps</span>
+                                <span class="set-xp">+${set.xp || 0} XP</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('')}
                 ${workout.goalXP ? `
                     <div class="xp-bonus-section">
                         <span class="xp-icon">🎯</span>
@@ -113,7 +135,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     </div>
                 ` : ''}
                 <div class="total-xp" style="font-weight: bold; font-size: 1.1em; margin-top: 15px;">
-                    Total XP: +${workout.totalXP + (workout.goalXP || 0)}
+                    Total XP: +${workout.xpEarned || 0}
                 </div>
                 <div class="workout-date" style="color: #666; margin-top: 10px; font-size: 0.9em;">
                     ${formatDate(workout.timestamp)}

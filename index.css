@@ -1210,34 +1210,3 @@ input:valid {
 .quick-actions {
     padding: 0 20px;
 }
-
-/* Hide form tips */
-.form-tips {
-    display: none;  /* Hide tips by default */
-}
-
-/* Optional: Add a button to show/hide tips */
-.show-tips-button {
-    background: none;
-    border: none;
-    color: #667eea;
-    font-size: 0.9rem;
-    padding: 4px 8px;
-    cursor: pointer;
-    margin-bottom: 8px;
-}
-
-.show-tips-button:hover {
-    text-decoration: underline;
-}
-
-/* When tips are shown */
-.form-tips.show {
-    display: block;
-    margin-top: 8px;
-    padding: 12px;
-    background: #f8faff;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    color: #666;
-}

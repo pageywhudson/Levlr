@@ -937,6 +937,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update workout history and stats
                 await authService.fetchUserWorkoutHistory();
                 
+                // Update goals progress
+                const goals = JSON.parse(localStorage.getItem('workoutGoals')) || [];
+                const updatedGoals = goals.map(goal => {
+                    if (goal.exercise === selectedExercise) {
+                        // Check if the workout contributes to the goal
+                        const totalReps = sets.reduce((total, set) => total + parseInt(set.reps), 0);
+                        goal.progress += totalReps;
+                        
+                        // Check if goal is completed
+                        if (goal.progress >= goal.target && !goal.completed) {
+                            goal.completed = true;
+                            goal.completedDate = new Date().toISOString();
+                            // Show goal completion notification
+                            showNotification(`Goal completed: ${goal.exercise}!`, 'success');
+                        }
+                    }
+                    return goal;
+                });
+                
+                // Save updated goals
+                localStorage.setItem('workoutGoals', JSON.stringify(updatedGoals));
+                
                 // Reset form
                 exerciseForm.reset();
                 
@@ -1262,17 +1284,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         return 0; // Return 0 if all attempts fail
-    }
-
-    function toggleTips() {
-        const tips = document.querySelector('.form-tips');
-        const button = document.querySelector('.show-tips-button');
-        if (tips.classList.contains('show')) {
-            tips.classList.remove('show');
-            button.textContent = 'Show Tips';
-        } else {
-            tips.classList.add('show');
-            button.textContent = 'Hide Tips';
-        }
     }
 }); 
