@@ -82,6 +82,18 @@ function manageGoals() {
     return updatedGoals;
 }
 
+// Add this function near the top of your file
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Create instance of AuthService
     const authService = new AuthService();
@@ -858,13 +870,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Update form submission handler
+    // Add this at the top of your file, after DOMContentLoaded
+    const exerciseForm = document.querySelector('.exercise-form');
+    if (!exerciseForm) {
+        console.error('Exercise form not found!');
+    }
+
+    // Add a basic console log to verify the form submission is being triggered
     exerciseForm.addEventListener('submit', async function(e) {
         e.preventDefault();
+        console.log('Form submitted!');  // Add this line
         
         try {
             const exerciseSelect = document.getElementById('exercise');
             const selectedExercise = exerciseSelect.value;
+            console.log('Selected exercise:', selectedExercise);  // Add this line
             const notes = document.getElementById('notes').value;
             
             // Collect all sets data
@@ -1240,30 +1260,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
         return 0; // Return 0 if all attempts fail
     }
-
-    // Add this near where you submit the workout
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        try {
-            const workoutData = {
-                // ... your workout data construction
-            };
-            console.log('Sending workout data:', JSON.stringify(workoutData, null, 2));
-
-            const response = await fetch(`${authService.baseUrl}/workouts`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${authService.getToken()}`
-                },
-                body: JSON.stringify(workoutData)
-            });
-            console.log('Response status:', response.status);
-            const responseData = await response.json();
-            console.log('Response data:', responseData);
-
-        } catch (error) {
-            console.error('Error saving workout:', error);
-        }
-    });
 }); 
