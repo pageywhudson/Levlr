@@ -190,17 +190,30 @@ class AuthService {
             }
 
             const workouts = await response.json();
-            console.log('Received workouts:', workouts);
+            console.log('Received workouts detailed:', JSON.stringify(workouts, null, 2));
             
             const stats = workouts.reduce((acc, workout) => {
+                console.log('Processing workout:', workout);
+                console.log('Workout exercises:', workout.exercises);
+                
                 const workoutXP = workout.xpEarned || 0;
                 const today = new Date().toDateString();
                 const workoutDate = new Date(workout.timestamp).toDateString();
                 
+                let setsCompleted = 0;
+                if (workout.exercises && Array.isArray(workout.exercises)) {
+                    setsCompleted = workout.exercises.reduce((total, ex) => {
+                        if (ex.sets && Array.isArray(ex.sets)) {
+                            return total + ex.sets.length;
+                        }
+                        return total;
+                    }, 0);
+                }
+
                 return {
                     totalXP: acc.totalXP + workoutXP,
                     todayXP: workoutDate === today ? acc.todayXP + workoutXP : acc.todayXP,
-                    setsCompleted: acc.setsCompleted + workout.exercises.reduce((total, ex) => total + ex.sets.length, 0),
+                    setsCompleted: acc.setsCompleted + setsCompleted,
                     lastWorkout: workout.timestamp
                 };
             }, {
@@ -217,8 +230,16 @@ class AuthService {
             localStorage.setItem('userStats', JSON.stringify(stats));
 
         } catch (error) {
-            console.error('Error fetching workout history:', error, 'Token:', this.getToken());
+            console.error('Error fetching workout history:', error);
+            console.log('Error workout data:', error.workout);
             localStorage.setItem('workoutHistory', JSON.stringify([]));
+            localStorage.setItem('userStats', JSON.stringify({
+                totalXP: 0,
+                todayXP: 0,
+                setsCompleted: 0,
+                lastWorkout: null,
+                streak: 0
+            }));
         }
     }
 

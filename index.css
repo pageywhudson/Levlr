@@ -132,14 +132,21 @@ input:focus {
     width: 100%;
     min-height: 100vh;
     background: #f5f7ff;
-    padding: 20px;
+    padding-top: 80px;  /* Add padding for fixed header */
 }
 
 .dashboard-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    padding: 16px 20px;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .dashboard-header .app-title {
@@ -162,8 +169,7 @@ input:focus {
     background: white;
     border-radius: 16px;
     padding: 20px;
-    margin: 20px;
-    margin-top: 80px;  /* Add more space below the header */
+    margin: 0 20px 20px 20px;  /* Remove top margin since we have padding-top on container */
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
@@ -1171,7 +1177,11 @@ input:valid {
 .history-container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 80px 20px 20px 20px;  /* Add more padding at the top */
+    padding-top: 80px;  /* Add padding for fixed header */
+}
+
+.history-content {
+    padding: 20px;
 }
 
 /* History Filters - add some space */
@@ -1181,4 +1191,5 @@ input:valid {
     padding: 20px;
     margin-bottom: 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-top: 20px;  /* Add space between header and filters */
 }
