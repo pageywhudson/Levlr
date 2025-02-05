@@ -246,6 +246,13 @@ document.addEventListener('DOMContentLoaded', function() {
         renderGoals(goals);
     }
 
+    // Add title case helper function
+    function toTitleCase(str) {
+        return str.split('-')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    }
+
     // Render goals to the page
     function renderGoals(goals) {
         if (goals.length === 0) {
@@ -260,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
         goalsList.innerHTML = goals.map((goal, index) => `
             <div class="goal-card">
                 <div class="goal-header">
-                    <h3>${goal.exercise}</h3>
+                    <h3>${toTitleCase(goal.exercise)}</h3>
                     <span class="goal-type-badge">${goal.type}</span>
                 </div>
                 <div class="goal-details">
