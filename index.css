@@ -140,6 +140,7 @@ input:focus {
     top: 0;
     left: 0;
     right: 0;
+    height: 60px;
     background: white;
     display: flex;
     justify-content: space-between;
@@ -259,6 +260,7 @@ input:focus {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
+    padding: 0 20px;
 }
 
 .action-button {
@@ -357,6 +359,7 @@ input:focus {
     padding: 1.5rem;
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding-top: 80px;  /* Add padding for fixed header */
 }
 
 .exercise-form .form-group {
@@ -1192,4 +1195,31 @@ input:valid {
     margin-bottom: 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     margin-top: 20px;  /* Add space between header and filters */
+}
+
+/* Log Workout Page Styles */
+.exercise-form-container {
+    padding-top: 80px;  /* Add padding for fixed header */
+}
+
+/* Ensure content starts below fixed header */
+.dashboard-content,
+.workout-content {
+    padding-top: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Stats card spacing */
+.stats-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 0 20px 20px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Quick actions spacing */
+.quick-actions {
+    padding: 0 20px;
 }

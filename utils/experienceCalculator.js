@@ -1,13 +1,31 @@
 class ExperienceCalculator {
-    // Base XP for completing a set
-    static BASE_XP_PER_SET = 10;
-    
-    // XP multipliers based on difficulty
-    static DIFFICULTY_MULTIPLIERS = {
-        'Beginner': 1,
-        'Intermediate': 1.5,
-        'Advanced': 2
-    };
+    constructor() {
+        this.baseXP = 10;  // Base XP for completing a set
+        this.difficultyMultipliers = {
+            'Beginner': 0.8,
+            'Intermediate': 1.0,
+            'Advanced': 1.2
+        };
+    }
+
+    calculateSetXP({ exercise, weight, reps, difficulty = 'Intermediate' }) {
+        // Base calculation
+        let xp = this.baseXP;
+
+        // Add XP based on reps
+        xp += reps;
+
+        // Add XP based on weight if applicable
+        if (weight > 0) {
+            xp += Math.floor(weight / 10);  // 1 XP per 10 units of weight
+        }
+
+        // Apply difficulty multiplier
+        const multiplier = this.difficultyMultipliers[difficulty] || 1.0;
+        xp = Math.floor(xp * multiplier);
+
+        return xp;
+    }
 
     // New constants for set streaks
     static SET_STREAK_WINDOW = 180; // 3 minutes in seconds
@@ -17,34 +35,6 @@ class ExperienceCalculator {
         4: 1.8,  // 4th set: 80% bonus
         5: 2.0   // 5th+ set: 100% bonus
     };
-
-    // Calculate XP for a single set
-    static calculateSetXP(weight, reps, exerciseDifficulty, bodyWeight, setNumber = 1, timeSinceLastSet = null) {
-        // Calculate volume (weight × reps)
-        const volume = weight * reps;
-        
-        // Calculate relative intensity (weight relative to body weight)
-        const relativeIntensity = weight / bodyWeight;
-        
-        // Get difficulty multiplier
-        const difficultyMultiplier = this.DIFFICULTY_MULTIPLIERS[exerciseDifficulty];
-        
-        // Calculate XP for the set
-        let setXP = Math.round(
-            this.BASE_XP_PER_SET * 
-            (1 + relativeIntensity) * 
-            difficultyMultiplier * 
-            (1 + Math.log10(volume))
-        );
-
-        // Apply set streak bonus if within time window
-        if (timeSinceLastSet !== null && timeSinceLastSet <= this.SET_STREAK_WINDOW) {
-            const streakMultiplier = this.SET_STREAK_MULTIPLIERS[Math.min(setNumber, 5)] || 2.0;
-            setXP = Math.round(setXP * streakMultiplier);
-        }
-        
-        return setXP;
-    }
 
     // Calculate total workout XP
     static calculateWorkoutXP(exercises, bodyWeight) {
