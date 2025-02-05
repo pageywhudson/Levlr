@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const addGoalButton = document.querySelector('.add-goal-button');
     const modal = document.getElementById('addGoalModal');
     const goalForm = document.getElementById('goalForm');
-    const cancelBtn = document.querySelector('.cancel-btn');
+    const cancelButton = document.querySelector('.cancel-btn');
     const exerciseSelect = document.getElementById('exercise');
     const targetMetricSelect = document.getElementById('targetMetric');
     const goalsList = document.querySelector('.goals-list');
@@ -104,21 +104,32 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Populate exercise select
-    function populateExercises() {
-        let html = '<option value="">Select an exercise</option>';
+    function populateExerciseSelect() {
+        exerciseSelect.innerHTML = '<option value="">Select an exercise</option>';
         
         Object.keys(exercises).forEach(type => {
-            html += `<optgroup label="${type.charAt(0).toUpperCase() + type.slice(1)}">`;
+            // Add popular exercises
+            const popularGroup = document.createElement('optgroup');
+            popularGroup.label = 'Popular';
             exercises[type].popular.forEach(exercise => {
-                html += `<option value="${exercise.toLowerCase().replace(/\s+/g, '-')}">${exercise}</option>`;
+                const option = document.createElement('option');
+                option.value = exercise.toLowerCase().replace(/\s+/g, '-');
+                option.textContent = exercise;
+                popularGroup.appendChild(option);
             });
-            exercises[type].other.forEach(exercise => {
-                html += `<option value="${exercise.toLowerCase().replace(/\s+/g, '-')}">${exercise}</option>`;
-            });
-            html += '</optgroup>';
-        });
+            exerciseSelect.appendChild(popularGroup);
 
-        exerciseSelect.innerHTML = html;
+            // Add other exercises
+            const otherGroup = document.createElement('optgroup');
+            otherGroup.label = 'Other';
+            exercises[type].other.forEach(exercise => {
+                const option = document.createElement('option');
+                option.value = exercise.toLowerCase().replace(/\s+/g, '-');
+                option.textContent = exercise;
+                otherGroup.appendChild(option);
+            });
+            exerciseSelect.appendChild(otherGroup);
+        });
     }
 
     // Update metric options based on selected exercise
@@ -272,34 +283,51 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event Listeners
     addGoalButton.addEventListener('click', () => {
-        modal.style.display = 'flex';
+        modal.style.display = 'block';
+        populateExerciseSelect();
     });
 
-    cancelBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
-
-    // Modify your goalForm submit handler
-    goalForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const newGoal = {
-            exercise: exerciseSelect.options[exerciseSelect.selectedIndex].text,
-            type: document.getElementById('goalType').value,
-            target: parseFloat(document.getElementById('targetValue').value),
-            metric: document.getElementById('targetMetric').value,
-            progress: 0,
-            createdAt: new Date().toISOString(),
-            isRecurring: true // Add this flag to indicate the goal should persist
-        };
-
-        const goals = JSON.parse(localStorage.getItem('workoutGoals')) || [];
-        goals.push(newGoal);
-        localStorage.setItem('workoutGoals', JSON.stringify(goals));
-
+    cancelButton.addEventListener('click', () => {
         modal.style.display = 'none';
         goalForm.reset();
-        loadGoals();
+    });
+
+    // Handle form submission
+    goalForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const exercise = document.getElementById('exercise').value;
+        const goalType = document.getElementById('goalType').value;
+        const target = parseInt(document.getElementById('target').value);
+        const metric = document.getElementById('metric').value;
+
+        // Create new goal object
+        const newGoal = {
+            id: Date.now().toString(),
+            exercise: exercise,
+            type: goalType,
+            target: target,
+            metric: metric,
+            progress: 0,
+            createdAt: new Date().toISOString(),
+            completed: false
+        };
+
+        // Get existing goals
+        const goals = JSON.parse(localStorage.getItem('workoutGoals')) || [];
+        
+        // Add new goal
+        goals.push(newGoal);
+        
+        // Save updated goals
+        localStorage.setItem('workoutGoals', JSON.stringify(goals));
+
+        // Hide modal and reset form
+        modal.style.display = 'none';
+        goalForm.reset();
+
+        // Refresh goals display
+        renderGoals();
     });
 
     goalsList.addEventListener('click', (e) => {
@@ -318,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Initialize
-    populateExercises();
+    populateExerciseSelect();
     loadGoals();
     updateMetricOptions(exerciseSelect.value);
 }); 
