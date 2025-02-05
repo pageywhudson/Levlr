@@ -82,10 +82,10 @@ function manageGoals() {
     return updatedGoals;
 }
 
-// Add this function near the top of your file
+// Add this function BEFORE the DOMContentLoaded event
 function showNotification(message, type = 'success') {
     const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
+    notification.className = 'notification ' + type;
     notification.textContent = message;
     document.body.appendChild(notification);
     
