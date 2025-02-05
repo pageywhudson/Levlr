@@ -42,6 +42,10 @@ class AuthService {
                 password: '***'
             });
 
+            // Create AbortController for timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
             const response = await fetch(`${this.baseUrl}/auth/login`, {
                 method: 'POST',
                 headers: {
@@ -50,8 +54,11 @@ class AuthService {
                 },
                 credentials: 'same-origin',
                 mode: 'cors',
-                body: JSON.stringify(credentials)
+                body: JSON.stringify(credentials),
+                signal: controller.signal
             });
+
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 const errorText = await response.text();
@@ -89,6 +96,10 @@ class AuthService {
 
             return true;
         } catch (error) {
+            if (error.name === 'AbortError') {
+                console.error('Login request timed out after 30 seconds');
+                throw new Error('Login timed out. Please try again.');
+            }
             console.error('Login error:', error);
             throw error;
         }

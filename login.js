@@ -16,6 +16,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     loginForm.addEventListener('submit', async function(e) {
         e.preventDefault();
+        const submitButton = loginForm.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.textContent;
+        submitButton.disabled = true;
+        submitButton.textContent = 'Logging in...';
         
         try {
             const username = document.getElementById('username').value;
@@ -34,6 +38,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Display error message
             errorMessage.textContent = 'Invalid username or password';
             errorMessage.style.display = 'block';
+            submitButton.disabled = false;
+            submitButton.textContent = originalButtonText;
         }
     });
 }); 
