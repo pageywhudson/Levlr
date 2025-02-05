@@ -934,6 +934,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Show success notification
                 showNotification('Workout logged successfully!', 'success');
                 
+                // Update workout history and stats
+                await authService.fetchUserWorkoutHistory();
+                
                 // Reset form
                 exerciseForm.reset();
                 

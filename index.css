@@ -170,7 +170,7 @@ input:focus {
     background: white;
     border-radius: 16px;
     padding: 20px;
-    margin: 0 20px 20px 20px;  /* Remove top margin since we have padding-top on container */
+    margin: 160px 20px 20px 20px;  /* Increase top margin to prevent header overlap */
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
@@ -359,7 +359,7 @@ input:focus {
     padding: 1.5rem;
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding-top: 80px;  /* Add padding for fixed header */
+    padding-top: 160px;  /* Increase padding to prevent header overlap */
 }
 
 .exercise-form .form-group {
@@ -1199,7 +1199,7 @@ input:valid {
 
 /* Log Workout Page Styles */
 .exercise-form-container {
-    padding-top: 80px;  /* Add padding for fixed header */
+    padding-top: 160px;  /* Increase padding to prevent header overlap */
 }
 
 /* Ensure content starts below fixed header */
@@ -1215,7 +1215,7 @@ input:valid {
     background: white;
     border-radius: 16px;
     padding: 20px;
-    margin: 0 20px 20px 20px;
+    margin: 160px 20px 20px 20px;  /* Increase top margin to prevent header overlap */
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
