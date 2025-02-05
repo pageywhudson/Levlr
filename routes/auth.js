@@ -2,6 +2,14 @@ const express = require('express');
 const router = express.Router();
 const AuthService = require('../services/auth');
 const auth = new AuthService();
+const cors = require('cors');
+
+router.use(cors({
+    origin: ['http://localhost:3000', 'http://127.0.0.1:5500', 'https://pageywhudson.github.io'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
+}));
 
 router.post('/register', async (req, res) => {
     try {

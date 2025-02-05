@@ -48,7 +48,7 @@ class AuthService {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                credentials: 'include',
+                credentials: 'same-origin',
                 mode: 'cors',
                 body: JSON.stringify(credentials)
             });

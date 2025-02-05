@@ -10,10 +10,18 @@ const app = express();
 // Middleware
 app.use(cors({
     origin: ['http://localhost:3000', 'http://127.0.0.1:5500', 'https://pageywhudson.github.io'],
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    exposedHeaders: ['Authorization'],
+    preflightContinue: false,
+    optionsSuccessStatus: 204
 }));
 app.use(express.json());
 app.use(express.static('./'));
+
+// Handle CORS preflight requests
+app.options('*', cors());
 
 // Connect to MongoDB
 console.log('Attempting to connect to MongoDB...');
