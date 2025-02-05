@@ -1197,11 +1197,6 @@ input:valid {
     margin-top: 20px;  /* Add space between header and filters */
 }
 
-/* Log Workout Page Styles */
-.exercise-form-container {
-    padding-top: 160px;  /* Increase padding to prevent header overlap */
-}
-
 /* Ensure content starts below fixed header */
 .dashboard-content,
 .workout-content {
@@ -1215,7 +1210,7 @@ input:valid {
     background: white;
     border-radius: 16px;
     padding: 20px;
-    margin: 60px 20px 20px 20px;  /* Increase top margin to prevent header overlap */
+    margin: 60px 0px 20px 0px;  /* Increase top margin to prevent header overlap */
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
