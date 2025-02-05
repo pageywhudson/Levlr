@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Modify your loadGoals function
     function loadGoals() {
-        const goals = manageGoals(); // This will reset goals if needed
+        const goals = JSON.parse(localStorage.getItem('workoutGoals')) || [];
         renderGoals(goals);
     }
 
@@ -325,8 +325,8 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.style.display = 'none';
         goalForm.reset();
 
-        // Refresh goals display
-        renderGoals();
+        // Refresh goals display with updated goals
+        loadGoals();
     });
 
     goalsList.addEventListener('click', (e) => {
