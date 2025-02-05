@@ -861,155 +861,72 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update form submission handler
     exerciseForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-
-        // Get selected exercise
-        const exerciseSelect = document.getElementById('exercise');
-        const selectedExercise = exerciseSelect.value;
         
-        if (!selectedExercise) {
-            alert('Please select an exercise');
-            return;
-        }
+        try {
+            const exerciseSelect = document.getElementById('exercise');
+            const selectedExercise = exerciseSelect.value;
+            const notes = document.getElementById('notes').value;
+            
+            // Collect all sets data
+            const setContainers = document.querySelectorAll('.set-container');
+            const sets = Array.from(setContainers).map((container, index) => {
+                const setNumber = index + 1;
+                const weight = document.getElementById(`weight-${setNumber}`)?.value || 0;
+                const reps = document.getElementById(`reps-${setNumber}`)?.value || 0;
+                
+                return {
+                    weight: {
+                        value: parseFloat(weight),
+                        unit: currentUnit
+                    },
+                    reps: parseInt(reps),
+                    completed: true
+                };
+            });
 
-        // Get exercise info
-        const exercise = exerciseInfo[selectedExercise];
-        if (!exercise) {
-            alert('Invalid exercise selected');
-            return;
-        }
-
-        // Get all set containers
-        const setContainers = document.querySelectorAll('.set-container');
-        const sets = [];
-
-        // Get exercise type
-        const selectedType = document.querySelector('.type-button.active').dataset.type;
-
-        // Ensure user weight is set for bodyweight exercises
-        if (selectedType === 'bodyweight') {
-            try {
-                await ensureUserWeight();
-            } catch (error) {
-                console.error('Error ensuring user weight:', error);
-                alert('Error getting user weight. Please try again.');
-                return;
-            }
-        }
-
-        // Collect data from each set
-        for (let i = 0; i < setContainers.length; i++) {
-            const container = setContainers[i];
-            const repsInput = container.querySelector(`input[id^="reps-"]`);
-            const weightInput = container.querySelector(`input[id^="weight-"]`);
-
-            if (!repsInput.value) {
-                alert('Please fill in all set details');
-                return;
-            }
-
-            // Handle both weighted and bodyweight exercises
-            const set = {
-                reps: parseInt(repsInput.value),
-                timestamp: new Date().toISOString()
+            const workoutData = {
+                exercises: [{
+                    name: selectedExercise,
+                    sets: sets,
+                    notes: notes
+                }],
+                timestamp: new Date(),
+                totalVolume: sets.reduce((total, set) => total + (set.weight.value * set.reps), 0),
+                xpEarned: 0  // This will be calculated on the server
             };
 
-            // Add weight info based on exercise type
-            if (weightInput) {
-                if (!weightInput.value) {
-                    alert('Please fill in all set details');
-                    return;
-                }
-                set.weight = {
-                    value: parseFloat(weightInput.value),
-                    unit: currentUnit
-                };
-            } else if (selectedType === 'bodyweight') {
-                // For bodyweight exercises, use user's body weight
-                set.weight = {
-                    value: preferences.userWeight,
-                    unit: preferences.weightUnit
-                };
+            console.log('Sending workout data:', JSON.stringify(workoutData, null, 2));
+
+            const response = await fetch(`${authService.baseUrl}/workouts`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authService.getToken()}`
+                },
+                body: JSON.stringify(workoutData)
+            });
+
+            console.log('Response status:', response.status);
+            const responseData = await response.json();
+            console.log('Response data:', responseData);
+
+            if (response.ok) {
+                // Show success notification
+                showNotification('Workout logged successfully!', 'success');
+                
+                // Reset form
+                exerciseForm.reset();
+                
+                // Redirect to dashboard after short delay
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
             } else {
-                // For cardio or other types
-                set.weight = {
-                    value: 0,
-                    unit: currentUnit
-                };
+                throw new Error('Failed to save workout');
             }
-
-            sets.push(set);
-        }
-
-        // Get notes if any
-        const notes = document.getElementById('notes').value;
-
-        try {
-            // Process each set
-            for (let i = 0; i < sets.length; i++) {
-                const set = sets[i];
-                const timeSinceLastSet = i > 0 ? 
-                    (new Date(set.timestamp) - new Date(sets[i-1].timestamp)) / 1000 : 
-                    null;
-
-                const success = await logSet({
-                    exercise: selectedExercise,
-                    difficulty: exercise.difficulty,
-                    weight: set.weight.value,
-                    reps: set.reps,
-                    notes,
-                    setNumber: i + 1,
-                    timeSinceLastSet
-                });
-
-                if (!success) {
-                    throw new Error('Failed to log set');
-                }
-            }
-
-            // Calculate and add goal XP bonus
-            const goalXP = updateGoalProgress(selectedExercise, sets);
-            
-            // Get the latest workout history
-            const workoutHistory = JSON.parse(localStorage.getItem('workoutHistory')) || [];
-            const lastWorkout = workoutHistory[0];
-            
-            // Add goal XP to workout history if earned
-            if (goalXP > 0) {
-                lastWorkout.goalXP = goalXP;
-                lastWorkout.totalXP += goalXP;
-                localStorage.setItem('workoutHistory', JSON.stringify(workoutHistory));
-            }
-
-            // Create overlay
-            const overlay = document.createElement('div');
-            overlay.className = 'notification-overlay';
-            document.body.appendChild(overlay);
-
-            // Create notification with correct XP value
-            const notification = document.createElement('div');
-            notification.className = 'goal-completion-notification';
-            notification.innerHTML = `
-                <div class="notification-content">
-                    <span class="notification-icon">✅</span>
-                    <div class="notification-text">
-                        <strong>Workout Logged!</strong>
-                        <p>${exerciseSelect.options[exerciseSelect.selectedIndex].text}</p>
-                        <span class="xp-bonus">+${lastWorkout.totalXP} XP</span>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(notification);
-
-            // Remove notification and overlay after delay, then redirect
-            setTimeout(() => {
-                notification.remove();
-                overlay.remove();
-                window.location.href = 'dashboard.html';
-            }, 2000);
-
         } catch (error) {
-            console.error('Error logging workout:', error);
-            alert('Error logging workout. Please try again.');
+            console.error('Error saving workout:', error);
+            showNotification('Failed to log workout. Please try again.', 'error');
         }
     });
 
