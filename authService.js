@@ -1,6 +1,9 @@
 class AuthService {
     constructor() {
-        this.baseUrl = 'http://localhost:3000/api';
+        // Use production URL when deployed, localhost for development
+        this.baseUrl = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000/api'
+            : 'https://levlr-api.onrender.com/api';  // Your Render URL
         this.tokenKey = 'authToken';
     }
 
