@@ -1263,4 +1263,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         return 0; // Return 0 if all attempts fail
     }
+
+    function toggleTips() {
+        const tips = document.querySelector('.form-tips');
+        const button = document.querySelector('.show-tips-button');
+        if (tips.classList.contains('show')) {
+            tips.classList.remove('show');
+            button.textContent = 'Show Tips';
+        } else {
+            tips.classList.add('show');
+            button.textContent = 'Hide Tips';
+        }
+    }
 }); 

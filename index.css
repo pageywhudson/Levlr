@@ -166,14 +166,6 @@ input:focus {
     cursor: pointer;
 }
 
-.stats-card {
-    background: white;
-    border-radius: 16px;
-    padding: 20px;
-    margin: 160px 20px 20px 20px;  /* Increase top margin to prevent header overlap */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
 .user-info h2 {
     font-size: 1.4rem;
     color: #333;
@@ -1217,4 +1209,35 @@ input:valid {
 /* Quick actions spacing */
 .quick-actions {
     padding: 0 20px;
+}
+
+/* Hide form tips */
+.form-tips {
+    display: none;  /* Hide tips by default */
+}
+
+/* Optional: Add a button to show/hide tips */
+.show-tips-button {
+    background: none;
+    border: none;
+    color: #667eea;
+    font-size: 0.9rem;
+    padding: 4px 8px;
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+.show-tips-button:hover {
+    text-decoration: underline;
+}
+
+/* When tips are shown */
+.form-tips.show {
+    display: block;
+    margin-top: 8px;
+    padding: 12px;
+    background: #f8faff;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #666;
 }
