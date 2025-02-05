@@ -3,12 +3,30 @@ const router = express.Router();
 const Workout = require('../models/Workout');
 const AuthService = require('../services/auth');
 const auth = new AuthService();
+const ExperienceCalculator = require('../utils/experienceCalculator');
 
 // Log new workout
 router.post('/', auth.verifyToken, async (req, res) => {
     try {
         console.log('Received workout data:', req.body);
         console.log('User ID:', req.userId);
+
+        // Calculate XP before saving
+        const calculator = new ExperienceCalculator();
+        let totalXP = 0;
+        req.body.exercises.forEach(exercise => {
+            exercise.sets.forEach(set => {
+                const setXP = calculator.calculateSetXP({
+                    exercise: exercise.name,
+                    weight: set.weight.value,
+                    reps: set.reps,
+                    difficulty: 'Intermediate' // You might want to store this in exercise data
+                });
+                set.xp = setXP;
+                totalXP += setXP;
+            });
+        });
+        req.body.xpEarned = totalXP;
 
         const workout = new Workout({
             userId: req.userId,
@@ -24,6 +42,10 @@ router.post('/', auth.verifyToken, async (req, res) => {
         const user = await User.findById(req.userId);
         console.log('Found user:', user);
 
+        // Make sure stats object exists
+        if (!user.stats) {
+            user.stats = { xp: 0 };
+        }
         user.stats.xp += workout.xpEarned;
         await user.save();
 

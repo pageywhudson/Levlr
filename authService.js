@@ -193,14 +193,14 @@ class AuthService {
             console.log('Received workouts:', workouts);
             
             const stats = workouts.reduce((acc, workout) => {
-                const workoutXP = workout.sets.reduce((total, set) => total + set.xp, 0);
+                const workoutXP = workout.xpEarned || 0;
                 const today = new Date().toDateString();
                 const workoutDate = new Date(workout.timestamp).toDateString();
                 
                 return {
                     totalXP: acc.totalXP + workoutXP,
                     todayXP: workoutDate === today ? acc.todayXP + workoutXP : acc.todayXP,
-                    setsCompleted: acc.setsCompleted + workout.sets.length,
+                    setsCompleted: acc.setsCompleted + workout.exercises.reduce((total, ex) => total + ex.sets.length, 0),
                     lastWorkout: workout.timestamp
                 };
             }, {

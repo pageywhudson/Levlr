@@ -160,10 +160,11 @@ input:focus {
 
 .stats-card {
     background: white;
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1.5rem;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 20px;
+    margin-top: 80px;  /* Add more space below the header */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .user-info h2 {
@@ -803,7 +804,7 @@ input:valid {
 
 /* Goals Page Styles */
 .goals-container {
-    padding-top: 60px;  /* Height of the header */
+    padding-top: 80px;  /* Update this to match other containers */
     height: 100vh;
     overflow-y: auto;
 }
@@ -1164,4 +1165,20 @@ input:valid {
     padding: 16px;
     max-width: 800px;
     margin: 0 auto;
+}
+
+/* History Container */
+.history-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 80px 20px 20px 20px;  /* Add more padding at the top */
+}
+
+/* History Filters - add some space */
+.history-filters {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
