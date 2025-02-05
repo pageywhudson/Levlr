@@ -174,7 +174,7 @@ class AuthService {
 
     async fetchUserWorkoutHistory() {
         try {
-            const response = await fetch('http://localhost:3000/api/workouts', {
+            const response = await fetch(`${this.baseUrl}/workouts`, {
                 headers: {
                     'Authorization': `Bearer ${this.getToken()}`,
                     'Accept': 'application/json'

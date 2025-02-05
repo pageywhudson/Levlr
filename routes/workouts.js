@@ -12,9 +12,9 @@ router.post('/', auth.verifyToken, async (req, res) => {
             ...req.body
         });
         
-        await workout.save();
+        await workout.save();  // Saves to MongoDB
 
-        // Update user XP
+        // Update user XP in database
         const User = require('../models/User');
         const user = await User.findById(req.userId);
         user.stats.xp += workout.xpEarned;
