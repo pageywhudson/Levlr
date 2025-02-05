@@ -108,27 +108,26 @@ document.addEventListener('DOMContentLoaded', function() {
         exerciseSelect.innerHTML = '<option value="">Select an exercise</option>';
         
         Object.keys(exercises).forEach(type => {
-            // Add popular exercises
-            const popularGroup = document.createElement('optgroup');
-            popularGroup.label = 'Popular';
+            // Create type group
+            const typeGroup = document.createElement('optgroup');
+            typeGroup.label = type.charAt(0).toUpperCase() + type.slice(1);
+            
+            // Add popular exercises first
             exercises[type].popular.forEach(exercise => {
                 const option = document.createElement('option');
                 option.value = exercise.toLowerCase().replace(/\s+/g, '-');
                 option.textContent = exercise;
-                popularGroup.appendChild(option);
+                typeGroup.appendChild(option);
             });
-            exerciseSelect.appendChild(popularGroup);
-
-            // Add other exercises
-            const otherGroup = document.createElement('optgroup');
-            otherGroup.label = 'Other';
+            
+            // Then add other exercises
             exercises[type].other.forEach(exercise => {
                 const option = document.createElement('option');
                 option.value = exercise.toLowerCase().replace(/\s+/g, '-');
                 option.textContent = exercise;
-                otherGroup.appendChild(option);
+                typeGroup.appendChild(option);
             });
-            exerciseSelect.appendChild(otherGroup);
+            exerciseSelect.appendChild(typeGroup);
         });
     }
 
