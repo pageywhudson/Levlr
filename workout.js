@@ -120,14 +120,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add constants after user data is initialized
     const KG_TO_LBS = 2.20462;
     const LBS_TO_KG = 0.453592;
-    let currentUnit = (JSON.parse(localStorage.getItem('userPreferences')) || {}).weightUnit || 'lbs';
-
     // Load user preferences
     const preferences = JSON.parse(localStorage.getItem('userPreferences')) || {
         weightUnit: 'kg',
         distanceUnit: 'km',
         userWeight: 0
     };
+    let currentUnit = preferences.weightUnit;
 
     // Exercise information database
     const exerciseInfo = {
@@ -897,7 +896,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return {
                     weight: {
                         value: parseFloat(weight),
-                        unit: currentUnit
+                        unit: preferences.weightUnit
                     },
                     reps: parseInt(reps),
                     completed: true
