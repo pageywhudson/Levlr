@@ -330,6 +330,7 @@ input:focus {
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     margin-bottom: 2rem;
+    margin-top: 4rem;
 }
 
 .type-button {
@@ -359,7 +360,6 @@ input:focus {
     padding: 1.5rem;
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding-top: 160px;  /* Increase padding to prevent header overlap */
 }
 
 .exercise-form .form-group {
@@ -1215,7 +1215,7 @@ input:valid {
     background: white;
     border-radius: 16px;
     padding: 20px;
-    margin: 160px 20px 20px 20px;  /* Increase top margin to prevent header overlap */
+    margin: 60px 20px 20px 20px;  /* Increase top margin to prevent header overlap */
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
