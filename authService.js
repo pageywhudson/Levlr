@@ -83,7 +83,9 @@ class AuthService {
                 lastWorkout: null
             }));
 
+            console.log('About to fetch workout history...');
             await this.fetchUserWorkoutHistory();
+            console.log('Workout history fetched');
 
             return true;
         } catch (error) {
@@ -174,6 +176,7 @@ class AuthService {
 
     async fetchUserWorkoutHistory() {
         try {
+            console.log('Fetching workout history from:', `${this.baseUrl}/workouts`);
             const response = await fetch(`${this.baseUrl}/workouts`, {
                 headers: {
                     'Authorization': `Bearer ${this.getToken()}`,
@@ -181,11 +184,13 @@ class AuthService {
                 }
             });
 
+            console.log('Workout history response status:', response.status);
             if (!response.ok) {
                 throw new Error('Failed to fetch workout history');
             }
 
             const workouts = await response.json();
+            console.log('Received workouts:', workouts);
             
             const stats = workouts.reduce((acc, workout) => {
                 const workoutXP = workout.sets.reduce((total, set) => total + set.xp, 0);
@@ -206,12 +211,13 @@ class AuthService {
             });
 
             stats.streak = this.calculateStreak(workouts);
+            console.log('Calculated stats:', stats);
 
             localStorage.setItem('workoutHistory', JSON.stringify(workouts));
             localStorage.setItem('userStats', JSON.stringify(stats));
 
         } catch (error) {
-            console.error('Error fetching workout history:', error);
+            console.error('Error fetching workout history:', error, 'Token:', this.getToken());
             localStorage.setItem('workoutHistory', JSON.stringify([]));
         }
     }
