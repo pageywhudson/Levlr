@@ -1323,4 +1323,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
         return 0; // Return 0 if all attempts fail
     }
+
+    // Add this near where you submit the workout
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        try {
+            const workoutData = {
+                // ... your workout data construction
+            };
+            console.log('Sending workout data:', JSON.stringify(workoutData, null, 2));
+
+            const response = await fetch(`${authService.baseUrl}/workouts`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authService.getToken()}`
+                },
+                body: JSON.stringify(workoutData)
+            });
+            console.log('Response status:', response.status);
+            const responseData = await response.json();
+            console.log('Response data:', responseData);
+
+        } catch (error) {
+            console.error('Error saving workout:', error);
+        }
+    });
 }); 
