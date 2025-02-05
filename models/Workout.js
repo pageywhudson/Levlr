@@ -6,7 +6,7 @@ const workoutSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    date: {
+    timestamp: {
         type: Date,
         default: Date.now
     },
@@ -24,7 +24,8 @@ const workoutSchema = new mongoose.Schema({
             completed: {
                 type: Boolean,
                 default: true
-            }
+            },
+            xp: Number  // Add XP field for each set
         }],
         notes: String
     }],
