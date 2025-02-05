@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const heightToggle = document.querySelector('[data-unit="height"]');
         const weightToggle = document.querySelector('[data-unit="weight"]');
 
-        const submitButton = form.querySelector('.signup-button');
+        const submitButton = form.querySelector('.login-button');
         const originalText = submitButton.textContent;
         
         try {
