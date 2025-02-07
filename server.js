@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const workoutRoutes = require('./routes/workouts');
+const achievementRoutes = require('./routes/achievements');
+const exerciseRoutes = require('./routes/exercises');
 
 const app = express();
 
@@ -56,6 +58,8 @@ mongoose.connection.on('disconnected', () => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/workouts', workoutRoutes);
+app.use('/api/achievements', achievementRoutes);
+app.use('/api/exercises', exerciseRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

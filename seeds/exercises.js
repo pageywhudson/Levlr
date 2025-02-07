@@ -2,19 +2,84 @@ const Exercise = require('../models/Exercise');
 
 const exercises = [
     {
+        id: 'bench-press',
         name: 'Bench Press',
-        category: 'Push',
-        equipment: 'Barbell',
+        description: 'A compound exercise that targets the chest, shoulders, and triceps.',
         difficulty: 'Intermediate',
-        recommendedReps: { min: 5, max: 12 },
-        weightRanges: {
-            beginner: { min: 0.5, max: 0.8 },     // 50-80% of body weight
-            intermediate: { min: 0.8, max: 1.2 },  // 80-120% of body weight
-            advanced: { min: 1.2, max: 1.8 }       // 120-180% of body weight
-        },
-        description: 'Fundamental chest exercise that also works triceps and shoulders',
-        form: 'Lie on bench, feet flat on floor. Grip bar slightly wider than shoulders. Lower bar to chest, then press up.',
-        muscles: ['Chest', 'Triceps', 'Front Deltoids']
+        category: 'weightlifting',
+        type: 'popular',
+        muscles: ['Chest', 'Shoulders', 'Triceps'],
+        recommendedReps: { min: 8, max: 12 },
+        tips: [
+            'Keep your feet flat on the ground',
+            'Maintain a slight arch in your back',
+            'Lower the bar to your mid-chest',
+            'Keep your elbows at about 45 degrees',
+            'Breathe out as you push'
+        ]
+    },
+    {
+        id: 'push-ups',
+        name: 'Push Ups',
+        description: 'A compound bodyweight exercise targeting chest, shoulders, and triceps.',
+        difficulty: 'Beginner',
+        category: 'bodyweight',
+        type: 'popular',
+        muscles: ['Chest', 'Shoulders', 'Triceps'],
+        recommendedReps: { min: 8, max: 20 },
+        tips: [
+            'Keep your body straight',
+            'Lower your chest to the ground',
+            'Keep your core tight'
+        ],
+        achievements: [
+            { id: 'pushups-30', requirement: 30 },
+            { id: 'pushups-50', requirement: 50 },
+            { id: 'pushups-80', requirement: 80 },
+            { id: 'pushups-100', requirement: 100 }
+        ]
+    },
+    {
+        id: 'sit-ups',
+        name: 'Sit Ups',
+        description: 'A core exercise targeting the abdominal muscles.',
+        difficulty: 'Beginner',
+        category: 'bodyweight',
+        type: 'popular',
+        muscles: ['Abs', 'Hip Flexors'],
+        recommendedReps: { min: 10, max: 25 },
+        tips: [
+            'Keep your feet flat on the ground',
+            'Cross your arms over your chest',
+            'Engage your core throughout'
+        ],
+        achievements: [
+            { id: 'situps-30', requirement: 30 },
+            { id: 'situps-50', requirement: 50 },
+            { id: 'situps-80', requirement: 80 },
+            { id: 'situps-100', requirement: 100 }
+        ]
+    },
+    {
+        id: 'bicep-curls',
+        name: 'Bicep Curls',
+        description: 'An isolation exercise targeting the biceps.',
+        difficulty: 'Beginner',
+        category: 'weightlifting',
+        type: 'other',
+        muscles: ['Biceps'],
+        recommendedReps: { min: 8, max: 15 },
+        tips: [
+            'Keep your elbows close to your body',
+            'Control the movement',
+            'Don\'t swing your body'
+        ],
+        achievements: [
+            { id: 'bicep-curls-30', requirement: 30 },
+            { id: 'bicep-curls-50', requirement: 50 },
+            { id: 'bicep-curls-80', requirement: 80 },
+            { id: 'bicep-curls-100', requirement: 100 }
+        ]
     },
     {
         name: 'Squat',
@@ -183,4 +248,18 @@ const exercises = [
     }
 ];
 
-module.exports = exercises; 
+async function seedExercises() {
+    try {
+        // Clear existing exercises
+        await Exercise.deleteMany({});
+        
+        // Insert new exercises
+        await Exercise.insertMany(exercises);
+        
+        console.log('Exercise database seeded successfully');
+    } catch (error) {
+        console.error('Error seeding exercise database:', error);
+    }
+}
+
+module.exports = { seedExercises }; 

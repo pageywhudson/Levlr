@@ -1,48 +1,52 @@
 const mongoose = require('mongoose');
 
 const exerciseSchema = new mongoose.Schema({
-    name: {
+    id: {
         type: String,
         required: true,
         unique: true
     },
-    category: {
+    name: {
         type: String,
-        enum: ['Push', 'Pull', 'Legs', 'Core', 'Cardio'],
         required: true
     },
-    equipment: {
+    description: {
         type: String,
-        enum: ['Barbell', 'Dumbbell', 'Machine', 'Bodyweight', 'Cable', 'Other'],
         required: true
     },
     difficulty: {
         type: String,
         enum: ['Beginner', 'Intermediate', 'Advanced'],
+        default: 'Intermediate'
+    },
+    category: {
+        type: String,
+        enum: ['weightlifting', 'bodyweight', 'cardio'],
         required: true
     },
+    type: {
+        type: String,
+        enum: ['popular', 'other'],
+        default: 'other'
+    },
+    muscles: [{
+        type: String
+    }],
     recommendedReps: {
         min: Number,
-        max: Number
-    },
-    // Weight ranges as percentage of body weight
-    weightRanges: {
-        beginner: {
-            min: Number,
-            max: Number
-        },
-        intermediate: {
-            min: Number,
-            max: Number
-        },
-        advanced: {
-            min: Number,
-            max: Number
+        max: Number,
+        unit: {
+            type: String,
+            default: 'reps'
         }
     },
-    description: String,
-    form: String,
-    muscles: [String]
+    tips: [{
+        type: String
+    }],
+    achievements: [{
+        id: String,
+        requirement: Number
+    }]
 });
 
 module.exports = mongoose.model('Exercise', exerciseSchema); 

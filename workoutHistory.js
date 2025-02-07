@@ -106,40 +106,24 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     function renderWorkout(workout) {
-        // Handle the new data structure from MongoDB
-        const exercises = workout.exercises || [];
         return `
             <div class="workout-card">
-                ${exercises.map(exercise => `
-                    <div class="workout-header">
-                        <h3>${toTitleCase(exercise.name)}</h3>
-                    </div>
-                    <div class="sets-container">
-                        ${exercise.sets.map((set, index) => `
-                            <div class="set-row">
-                                <span>Set ${index + 1}: ${
-                                    set.weight?.value 
-                                        ? `${set.weight.value}${set.weight.unit} × ` 
-                                        : ''
-                                }${set.reps} reps</span>
-                                <span class="set-xp">+${set.xp || 0} XP</span>
-                            </div>
-                        `).join('')}
+                <div class="workout-header">
+                    <span class="workout-date">${formatDate(workout.timestamp)}</span>
+                    <span class="xp-earned">+${workout.xpEarned} XP</span>
+                </div>
+                ${workout.exercises.map(exercise => `
+                    <div class="exercise-entry">
+                        <div class="exercise-header">
+                            <h3>${exercise.name}</h3>
+                            <small class="exercise-id" style="display:none">${exercise.exerciseId}</small>
+                        </div>
+                        <div class="sets-container">
+                            ${renderSets(exercise.sets)}
+                        </div>
+                        ${exercise.notes ? `<p class="exercise-notes">${exercise.notes}</p>` : ''}
                     </div>
                 `).join('')}
-                ${workout.goalXP ? `
-                    <div class="xp-bonus-section">
-                        <span class="xp-icon">🎯</span>
-                        <span class="xp-label">Goal Completion Bonus</span>
-                        <span class="xp-value">+${workout.goalXP} XP</span>
-                    </div>
-                ` : ''}
-                <div class="total-xp" style="font-weight: bold; font-size: 1.1em; margin-top: 15px;">
-                    Total XP: +${workout.xpEarned || 0}
-                </div>
-                <div class="workout-date" style="color: #666; margin-top: 10px; font-size: 0.9em;">
-                    ${formatDate(workout.timestamp)}
-                </div>
             </div>
         `;
     }

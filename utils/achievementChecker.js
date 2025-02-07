@@ -15,8 +15,8 @@ class AchievementChecker {
         workouts.forEach(w => {
             if (new Date(w.timestamp).toDateString() === today) {
                 w.exercises.forEach(exercise => {
-                    const exerciseName = exercise.name.toLowerCase();
-                    dailyTotals[exerciseName] = (dailyTotals[exerciseName] || 0) + 
+                    const exerciseId = exercise.exerciseId;
+                    dailyTotals[exerciseId] = (dailyTotals[exerciseId] || 0) + 
                         exercise.sets.reduce((total, set) => total + set.reps, 0);
                 });
             }
@@ -24,8 +24,8 @@ class AchievementChecker {
          
         // Add totals from current workout
         workout.exercises.forEach(exercise => {
-            const exerciseName = exercise.name.toLowerCase();
-            dailyTotals[exerciseName] = (dailyTotals[exerciseName] || 0) + 
+            const exerciseId = exercise.exerciseId;
+            dailyTotals[exerciseId] = (dailyTotals[exerciseId] || 0) + 
                 exercise.sets.reduce((total, set) => total + set.reps, 0);
         });
 
@@ -33,7 +33,7 @@ class AchievementChecker {
 
         // Check each achievement
         for (const achievement of Object.values(ACHIEVEMENTS)) {
-            const exerciseTotal = dailyTotals[achievement.exercise] || 0;
+            const exerciseTotal = dailyTotals[achievement.exerciseId] || 0;
             
             if (exerciseTotal >= achievement.requirement) {
                 try {

@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', async function() {
     // Create instance of AuthService
     const authService = new AuthService();
+    const exerciseService = new ExerciseService(authService);
     
     // Check if user is authenticated
     if (!authService.isAuthenticated()) {

@@ -97,9 +97,10 @@ function showNotification(message, type = 'success') {
 document.addEventListener('DOMContentLoaded', function() {
     // Create instance of AuthService
     const authService = new AuthService();
-    // Initialize achievement services
+    // Initialize services
     const achievementService = new AchievementService(authService);
     const achievementChecker = new AchievementChecker(achievementService);
+    const exerciseService = new ExerciseService(authService);
     
     // Check if user is authenticated
     if (!authService.isAuthenticated()) {
@@ -170,102 +171,69 @@ document.addEventListener('DOMContentLoaded', function() {
     const formContainer = document.querySelector('.exercise-form-container');
     const searchInput = document.getElementById('exercise-search');
     
-    // Exercise lists by type
-    const exercises = {
-        weightlifting: {
-            popular: [
-                'Bench Press',
-                'Squat',
-                'Deadlift',
-                'Overhead Press',
-                'Barbell Row'
-            ],
-            other: [
-                'Dumbbell Bench Press',
-                'Romanian Deadlift',
-                'Leg Press',
-                'Incline Bench Press',
-                'Dumbbell Shoulder Press',
-                'Bent Over Row',
-                'T-Bar Row',
-                'Front Squat',
-                'Hack Squat',
-                'Lunges',
-                'Dumbbell Lunges',
-                'Leg Extensions',
-                'Leg Curls',
-                'Calf Raises',
-                'Tricep Extensions',
-                'Bicep Curls',
-                'Hammer Curls',
-                'Lateral Raises',
-                'Face Pulls',
-                'Shrugs'
-            ]
-        },
-        bodyweight: {
-            popular: [
-                'Push-ups',
-                'Pull-ups',
-                'Chin-ups',
-                'Dips',
-                'Squats'
-            ],
-            other: [
-                'Inverted Rows',
-                'Pike Push-ups',
-                'Diamond Push-ups',
-                'Wide Push-ups',
-                'Decline Push-ups',
-                'Australian Pull-ups',
-                'Negative Pull-ups',
-                'Assisted Pull-ups',
-                'Pistol Squats',
-                'Jump Squats',
-                'Lunges',
-                'Mountain Climbers',
-                'Burpees',
-                'Plank',
-                'Side Plank',
-                'L-Sits',
-                'Hanging Leg Raises',
-                'Russian Twists',
-                'Bicycle Crunches',
-                'Superman Holds'
-            ]
-        },
-        cardio: {
-            popular: [
-                'Running',
-                'Cycling',
-                'Swimming',
-                'Rowing',
-                'Jump Rope'
-            ],
-            other: [
-                'Walking',
-                'Hiking',
-                'Stair Climber',
-                'Elliptical',
-                'Battle Ropes',
-                'Boxing',
-                'Kickboxing',
-                'High Knees',
-                'Jumping Jacks',
-                'Sprints',
-                'Hill Sprints',
-                'Sled Push',
-                'Sled Pull',
-                'Assault Bike',
-                'Cross-Country Skiing',
-                'Basketball',
-                'Soccer',
-                'Tennis',
-                'HIIT',
-                'Circuit Training'
-            ]
+    // Populate exercise select based on type
+    async function populateExerciseSelect(type) {
+        exerciseSelect.innerHTML = '<option value="">Select an exercise</option>';
+        
+        try {
+            const exercises = await exerciseService.getExercisesByCategory(type);
+            if (!exercises || exercises.length === 0) {
+                const noExercises = document.createElement('option');
+                noExercises.disabled = true;
+                noExercises.textContent = 'No exercises found for this category';
+                exerciseSelect.appendChild(noExercises);
+                return;
+            }
+            
+            const popularExercises = exercises.filter(e => e.type === 'popular');
+            const otherExercises = exercises.filter(e => e.type === 'other');
+            
+            if (exercises.length > 0) {
+                // Add popular exercises
+                const popularGroup = document.createElement('optgroup');
+                popularGroup.label = 'Popular';
+                popularExercises.forEach(exercise => {
+                    const option = document.createElement('option');
+                    option.value = exercise.id;
+                    option.textContent = exercise.name;
+                    popularGroup.appendChild(option);
+                });
+                exerciseSelect.appendChild(popularGroup);
+                
+                // Add other exercises
+                const otherGroup = document.createElement('optgroup');
+                otherGroup.label = 'Other';
+                otherExercises.forEach(exercise => {
+                    const option = document.createElement('option');
+                    option.value = exercise.id;
+                    option.textContent = exercise.name;
+                    otherGroup.appendChild(option);
+                });
+                exerciseSelect.appendChild(otherGroup);
+            }
+        } catch (error) {
+            console.error('Error loading exercises:', error);
+            showNotification('Failed to load exercises. Please try again.', 'error');
         }
-    };
+    }
+
+    // Update exercise info when selected
+    exerciseSelect.addEventListener('change', async function() {
+        const selectedExercise = await exerciseService.getExerciseById(this.value);
+        if (selectedExercise) {
+            const infoDiv = document.getElementById('exercise-info');
+            infoDiv.classList.remove('hidden');
+            
+            infoDiv.querySelector('.exercise-description').textContent = selectedExercise.description;
+            infoDiv.querySelector('.difficulty-badge').textContent = selectedExercise.difficulty;
+            
+            // Update recommended reps if available
+            if (selectedExercise.recommendedReps) {
+                infoDiv.querySelector('.exercise-description').innerHTML += 
+                    `<br><br>Recommended reps: ${selectedExercise.recommendedReps.min}-${selectedExercise.recommendedReps.max}`;
+            }
+        }
+    });
 
     // Update weight labels function
     function updateWeightLabels() {
@@ -290,38 +258,22 @@ document.addEventListener('DOMContentLoaded', function() {
         // Store currently selected exercise if any
         const currentlySelected = exerciseSelect.value;
         
-        exerciseSelect.innerHTML = '<option value="">Select an exercise</option>';
+        populateExerciseSelect(type);
         
-        if (exercises[type]) {
-            if (exercises[type].popular.length > 0) {
-                const popularGroup = document.createElement('optgroup');
-                popularGroup.label = 'Popular';
-                exercises[type].popular.forEach(exercise => {
-                    const option = document.createElement('option');
-                    option.value = exerciseNameToKey(exercise);
-                    option.textContent = exercise;
-                    if (option.value === currentlySelected) {
-                        option.selected = true;
-                    }
-                    popularGroup.appendChild(option);
-                });
-                exerciseSelect.appendChild(popularGroup);
-            }
-
-            if (exercises[type].other.length > 0) {
-                const otherGroup = document.createElement('optgroup');
-                otherGroup.label = 'Other';
-                exercises[type].other.forEach(exercise => {
-                    const option = document.createElement('option');
-                    option.value = exerciseNameToKey(exercise);
-                    option.textContent = exercise;
-                    if (option.value === currentlySelected) {
-                        option.selected = true;
-                    }
-                    otherGroup.appendChild(option);
-                });
-                exerciseSelect.appendChild(otherGroup);
-            }
+        // Clear search and exercise selection
+        searchInput.value = '';
+        exerciseSelect.value = '';
+        
+        // Clear any existing set inputs except the first one
+        const setInputs = document.querySelector('.set-inputs');
+        const setContainers = setInputs.querySelectorAll('.set-container');
+        for (let i = 1; i < setContainers.length; i++) {
+            setContainers[i].remove();
+        }
+        
+        // Update the first set to match the new type
+        if (setContainers[0]) {
+            updateSetContainer(setContainers[0], type);
         }
     }
 
@@ -348,22 +300,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Update form fields
             updateFormForExerciseType(selectedType);
-            
-            // Clear search and exercise selection
-            searchInput.value = '';
-            exerciseSelect.value = '';
-            
-            // Clear any existing set inputs except the first one
-            const setInputs = document.querySelector('.set-inputs');
-            const setContainers = setInputs.querySelectorAll('.set-container');
-            for (let i = 1; i < setContainers.length; i++) {
-                setContainers[i].remove();
-            }
-            
-            // Update the first set to match the new type
-            if (setContainers[0]) {
-                updateSetContainer(setContainers[0], selectedType);
-            }
         });
     });
 
@@ -465,9 +401,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add this debug function
     function validateExerciseKeys() {
-        Object.keys(exercises).forEach(type => {
+        Object.keys(exerciseInfo).forEach(type => {
             ['popular', 'other'].forEach(category => {
-                exercises[type][category].forEach(exerciseName => {
+                exerciseInfo[type][category].forEach(exerciseName => {
                     const key = exerciseNameToKey(exerciseName);
                     if (!exerciseInfo[key]) {
                         console.warn(`Missing exercise info for: ${exerciseName} (key: ${key})`);
@@ -781,9 +717,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Update the search functionality to use the same key conversion
-    searchInput.addEventListener('input', function() {
+    searchInput.addEventListener('input', async function() {
         const searchTerm = this.value.toLowerCase();
-        const type = currentExerciseType;
+        const type = document.querySelector('.type-button.active').dataset.type;
         
         // Clear current options
         exerciseSelect.innerHTML = '<option value="">Select an exercise</option>';
@@ -794,13 +730,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Filter exercises based on search
-        const popularMatches = exercises[type].popular.filter(exercise => 
-            exercise.toLowerCase().includes(searchTerm)
+        const exercises = await exerciseService.getExercisesByCategory(type);
+        const filteredExercises = exercises.filter(exercise => 
+            exercise.name.toLowerCase().includes(searchTerm)
         );
         
-        const otherMatches = exercises[type].other.filter(exercise => 
-            exercise.toLowerCase().includes(searchTerm)
-        );
+        const popularMatches = filteredExercises.filter(e => e.type === 'popular');
+        const otherMatches = filteredExercises.filter(e => e.type === 'other');
 
         // Add matching exercises to select
         if (popularMatches.length > 0) {
@@ -808,9 +744,9 @@ document.addEventListener('DOMContentLoaded', function() {
             popularGroup.label = 'Popular';
             popularMatches.forEach(exercise => {
                 const option = document.createElement('option');
-                const key = exerciseNameToKey(exercise);
+                const key = exerciseNameToKey(exercise.name);
                 option.value = key;
-                option.textContent = exercise;
+                option.textContent = exercise.name;
                 popularGroup.appendChild(option);
             });
             exerciseSelect.appendChild(popularGroup);
@@ -821,9 +757,9 @@ document.addEventListener('DOMContentLoaded', function() {
             otherGroup.label = 'Other';
             otherMatches.forEach(exercise => {
                 const option = document.createElement('option');
-                const key = exerciseNameToKey(exercise);
+                const key = exerciseNameToKey(exercise.name);
                 option.value = key;
-                option.textContent = exercise;
+                option.textContent = exercise.name;
                 otherGroup.appendChild(option);
             });
             exerciseSelect.appendChild(otherGroup);
@@ -881,12 +817,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Form submission handler
     exerciseForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-        console.log('Form submitted!');
         
         try {
             const exerciseSelect = document.getElementById('exercise');
             const selectedExercise = exerciseSelect.value;
-            console.log('Selected exercise:', selectedExercise);
             const notes = document.getElementById('notes').value;
             
             // Collect all sets data
@@ -906,9 +840,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
             });
 
+            // Get exercise details
+            const exercise = await exerciseService.getExerciseById(selectedExercise);
             const workoutData = {
                 exercises: [{
-                    name: selectedExercise,
+                    name: exercise.name,
+                    exerciseId: exercise.id,
                     sets: sets,
                     notes: notes
                 }],
@@ -953,17 +890,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update goals progress
                 const goals = JSON.parse(localStorage.getItem('workoutGoals')) || [];
                 const updatedGoals = goals.map(goal => {
-                    if (goal.exercise === selectedExercise) {
-                        // Check if the workout contributes to the goal
-                        const totalReps = sets.reduce((total, set) => total + parseInt(set.reps), 0);
-                        goal.progress += totalReps;
+                    if (goal.exerciseId === selectedExercise) {
+                        // Calculate total reps/duration based on exercise type
+                        let progress = 0;
+                        if (exercise.category === 'cardio' && goal.metric.includes('minutes')) {
+                            progress = sets.reduce((total, set) => total + (set.duration || 0), 0);
+                        } else {
+                            progress = sets.reduce((total, set) => total + set.reps, 0);
+                        }
+                        
+                        goal.progress += progress;
                         
                         // Check if goal is completed
                         if (goal.progress >= goal.target && !goal.completed) {
                             goal.completed = true;
                             goal.completedDate = new Date().toISOString();
                             // Show goal completion notification
-                            showNotification(`Goal completed: ${goal.exercise}!`, 'success');
+                            showNotification(`Goal completed: ${goal.exerciseName}!`, 'success');
                         }
                     }
                     return goal;
@@ -991,10 +934,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update the ensureExerciseInfo function
     function ensureExerciseInfo() {
         // Go through all exercise types
-        Object.keys(exercises).forEach(type => {
+        Object.keys(exerciseInfo).forEach(type => {
             // Process both popular and other exercises
             ['popular', 'other'].forEach(category => {
-                exercises[type][category].forEach(exerciseName => {
+                exerciseInfo[type][category].forEach(exerciseName => {
                     const key = exerciseNameToKey(exerciseName);
                     if (!exerciseInfo[key]) {
                         console.log(`Auto-generating info for: ${exerciseName} (key: ${key})`);

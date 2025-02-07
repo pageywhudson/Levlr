@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const authService = new AuthService();
+    const exerciseService = new ExerciseService(authService);
     
     // Check if user is authenticated
     if (!authService.isAuthenticated()) {
@@ -16,125 +17,41 @@ document.addEventListener('DOMContentLoaded', function() {
     const targetMetricSelect = document.getElementById('targetMetric');
     const goalsList = document.querySelector('.goals-list');
 
-    // Load exercises from workout.js
-    const exercises = {
-        weightlifting: {
-            popular: [
-                'Bench Press',
-                'Squat',
-                'Deadlift',
-                'Overhead Press',
-                'Barbell Row'
-            ],
-            other: [
-                'Dumbbell Bench Press',
-                'Romanian Deadlift',
-                'Leg Press',
-                'Incline Bench Press',
-                'Dumbbell Shoulder Press',
-                'Bent Over Row',
-                'T-Bar Row',
-                'Front Squat',
-                'Hack Squat',
-                'Lunges',
-                'Dumbbell Lunges',
-                'Leg Extensions',
-                'Leg Curls',
-                'Calf Raises',
-                'Tricep Extensions',
-                'Bicep Curls',
-                'Hammer Curls',
-                'Lateral Raises',
-                'Face Pulls',
-                'Shrugs'
-            ]
-        },
-        bodyweight: {
-            popular: [
-                'Push-ups',
-                'Pull-ups',
-                'Chin-ups',
-                'Dips',
-                'Squats'
-            ],
-            other: [
-                'Inverted Rows',
-                'Pike Push-ups',
-                'Diamond Push-ups',
-                'Wide Push-ups',
-                'Decline Push-ups',
-                'Australian Pull-ups',
-                'Negative Pull-ups',
-                'Assisted Pull-ups',
-                'Pistol Squats',
-                'Jump Squats',
-                'Lunges',
-                'Mountain Climbers',
-                'Burpees',
-                'Plank',
-                'Side Plank',
-                'L-Sits',
-                'Hanging Leg Raises',
-                'Russian Twists',
-                'Bicycle Crunches',
-                'Superman Holds'
-            ]
-        },
-        cardio: {
-            popular: [
-                'Running',
-                'Cycling',
-                'Swimming',
-                'Rowing',
-                'Jump Rope'
-            ],
-            other: [
-                'Walking',
-                'Elliptical',
-                'Stair Climber',
-                'Hiking',
-                'Boxing',
-                'Dancing',
-                'HIIT',
-                'Cross Trainer',
-                'Battle Ropes',
-                'Jumping Jacks'
-            ]
-        }
-    };
-
     // Populate exercise select
-    function populateExerciseSelect() {
+    async function populateExerciseSelect() {
         exerciseSelect.innerHTML = '<option value="">Select an exercise</option>';
         
-        Object.keys(exercises).forEach(type => {
-            // Create type group
-            const typeGroup = document.createElement('optgroup');
-            typeGroup.label = type.charAt(0).toUpperCase() + type.slice(1);
+        const exercises = await exerciseService.getAllExercises();
+        
+        // Group exercises by category
+        const exercisesByCategory = exercises.reduce((acc, exercise) => {
+            if (!acc[exercise.category]) {
+                acc[exercise.category] = [];
+            }
+            acc[exercise.category].push(exercise);
+            return acc;
+        }, {});
+        
+        // Create optgroups for each category
+        Object.entries(exercisesByCategory).forEach(([category, categoryExercises]) => {
+            const group = document.createElement('optgroup');
+            group.label = category.charAt(0).toUpperCase() + category.slice(1);
             
-            // Add popular exercises first
-            exercises[type].popular.forEach(exercise => {
+            categoryExercises.forEach(exercise => {
                 const option = document.createElement('option');
-                option.value = exercise.toLowerCase().replace(/\s+/g, '-');
-                option.textContent = exercise;
-                typeGroup.appendChild(option);
+                option.value = exercise.id;
+                option.textContent = exercise.name;
+                exerciseSelect.appendChild(option);
             });
             
-            // Then add other exercises
-            exercises[type].other.forEach(exercise => {
-                const option = document.createElement('option');
-                option.value = exercise.toLowerCase().replace(/\s+/g, '-');
-                option.textContent = exercise;
-                typeGroup.appendChild(option);
-            });
-            exerciseSelect.appendChild(typeGroup);
+            exerciseSelect.appendChild(group);
         });
     }
 
     // Update metric options based on selected exercise
-    function updateMetricOptions(exerciseType) {
-        const cardioExercises = ['running', 'cycling', 'swimming', 'walking', 'rowing'];
-        const isCardio = cardioExercises.includes(exerciseType.toLowerCase());
+    async function updateMetricOptions(exerciseId) {
+        const exercise = await exerciseService.getExerciseById(exerciseId);
+        const isCardio = exercise?.category === 'cardio';
 
         // Clear existing options
         targetMetricSelect.innerHTML = '';
@@ -267,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
         goalsList.innerHTML = goals.map((goal, index) => `
             <div class="goal-card">
                 <div class="goal-header">
-                    <h3>${toTitleCase(goal.exercise)}</h3>
+                    <h3>${toTitleCase(goal.exerciseName)}</h3>
                     <span class="goal-type-badge">${goal.type}</span>
                 </div>
                 <div class="goal-details">
@@ -299,10 +216,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Handle form submission
-    goalForm.addEventListener('submit', function(e) {
+    goalForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const exercise = document.getElementById('exercise').value;
+        const exerciseId = document.getElementById('exercise').value;
+        const exercise = await exerciseService.getExerciseById(exerciseId);
         const goalType = document.getElementById('goalType').value;
         const target = parseInt(document.getElementById('target').value);
         const metric = document.getElementById('metric').value;
@@ -310,7 +228,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Create new goal object
         const newGoal = {
             id: Date.now().toString(),
-            exercise: exercise,
+            exerciseId: exerciseId,
+            exerciseName: exercise.name,
             type: goalType,
             target: target,
             metric: metric,
