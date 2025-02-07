@@ -97,6 +97,9 @@ function showNotification(message, type = 'success') {
 document.addEventListener('DOMContentLoaded', function() {
     // Create instance of AuthService
     const authService = new AuthService();
+    // Initialize achievement services
+    const achievementService = new AchievementService(authService);
+    const achievementChecker = new AchievementChecker(achievementService);
     
     // Check if user is authenticated
     if (!authService.isAuthenticated()) {
@@ -1295,8 +1298,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
         return 0; // Return 0 if all attempts fail
     }
-
-    const AchievementChecker = require('../utils/achievementChecker');
-    const achievementService = new AchievementService(authService);
-    const achievementChecker = new AchievementChecker(achievementService);
 }); 

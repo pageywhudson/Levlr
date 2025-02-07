@@ -1,5 +1,3 @@
-const { ACHIEVEMENTS } = require('./achievementConfig');
-
 class AchievementChecker {
     constructor(achievementService) {
         this.achievementService = achievementService;

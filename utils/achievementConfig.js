@@ -33,4 +33,4 @@ const ACHIEVEMENTS = {
     'bicep-curls-100': { id: 'bicep-curls-100', name: '100 Bicep Curls', description: 'Complete 100 bicep curls in a single day', icon: '/icons/bicep-curls-100.png', exercise: 'bicep-curls', requirement: 100 }
 };
 
-module.exports = { ACHIEVEMENTS }; 
+// module.exports = { ACHIEVEMENTS }; 
