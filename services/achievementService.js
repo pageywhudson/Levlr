@@ -28,7 +28,15 @@ class AchievementService {
                 },
                 body: JSON.stringify({ achievementId })
             });
-            return await response.json();
+            
+            // Check if response is JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return await response.json();
+            } else {
+                console.error('Received non-JSON response:', await response.text());
+                return null;
+            }
         } catch (error) {
             console.error('Error awarding achievement:', error);
             return null;

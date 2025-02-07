@@ -4,12 +4,28 @@ class AchievementChecker {
     }
 
     async checkWorkoutAchievements(workout) {
-        const exerciseTotals = {};
+        // Get today's workouts from localStorage
+        const workouts = JSON.parse(localStorage.getItem('workoutHistory')) || [];
+        const today = new Date().toDateString();
         
-        // Calculate total reps for each exercise
+        // Calculate daily totals including the current workout
+        const dailyTotals = {};
+        
+        // Add totals from previous workouts today
+        workouts.forEach(w => {
+            if (new Date(w.timestamp).toDateString() === today) {
+                w.exercises.forEach(exercise => {
+                    const exerciseName = exercise.name.toLowerCase();
+                    dailyTotals[exerciseName] = (dailyTotals[exerciseName] || 0) + 
+                        exercise.sets.reduce((total, set) => total + set.reps, 0);
+                });
+            }
+        });
+         
+        // Add totals from current workout
         workout.exercises.forEach(exercise => {
             const exerciseName = exercise.name.toLowerCase();
-            exerciseTotals[exerciseName] = (exerciseTotals[exerciseName] || 0) + 
+            dailyTotals[exerciseName] = (dailyTotals[exerciseName] || 0) + 
                 exercise.sets.reduce((total, set) => total + set.reps, 0);
         });
 
@@ -17,7 +33,7 @@ class AchievementChecker {
 
         // Check each achievement
         for (const achievement of Object.values(ACHIEVEMENTS)) {
-            const exerciseTotal = exerciseTotals[achievement.exercise] || 0;
+            const exerciseTotal = dailyTotals[achievement.exercise] || 0;
             
             if (exerciseTotal >= achievement.requirement) {
                 try {
