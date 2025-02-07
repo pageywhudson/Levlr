@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     // Create instance of AuthService
     const authService = new AuthService();
     
@@ -90,6 +90,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Call renderGoals when the page loads
     renderGoals();
+
+    // Load and display achievements
+    const achievementService = new AchievementService(authService);
+    const achievements = await achievementService.getUserAchievements();
+    const achievementsGrid = document.querySelector('.achievements-grid');
+    
+    if (!achievements.length) {
+        achievementsGrid.innerHTML = `
+            <div class="empty-achievements">
+                <p>No achievements yet. Start logging workouts to earn badges!</p>
+            </div>
+        `;
+    } else {
+        achievementsGrid.innerHTML = achievements.map(achievement => {
+            const achievementConfig = ACHIEVEMENTS[achievement.achievementId];
+            return `
+                <div class="achievement-card">
+                    <img src="${achievementConfig.icon}" alt="${achievementConfig.name}" class="achievement-icon">
+                    <div class="achievement-name">${achievementConfig.name}</div>
+                    <div class="achievement-date">Earned ${new Date(achievement.earnedDate).toLocaleDateString()}</div>
+                </div>
+            `;
+        }).join('');
+    }
 });
 
 // Update the renderGoals function

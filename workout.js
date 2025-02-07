@@ -936,6 +936,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update workout history and stats
                 await authService.fetchUserWorkoutHistory();
                 
+                // Check for achievements
+                const earnedAchievements = await achievementChecker.checkWorkoutAchievements(workoutData);
+                
+                // Show achievement notifications
+                earnedAchievements.forEach(achievement => {
+                    showNotification(
+                        `Achievement Unlocked: ${achievement.name}!`,
+                        'achievement'
+                    );
+                });
+                
                 // Update goals progress
                 const goals = JSON.parse(localStorage.getItem('workoutGoals')) || [];
                 const updatedGoals = goals.map(goal => {
@@ -1284,4 +1295,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         return 0; // Return 0 if all attempts fail
     }
+
+    const AchievementChecker = require('../utils/achievementChecker');
+    const achievementService = new AchievementService(authService);
+    const achievementChecker = new AchievementChecker(achievementService);
 }); 
