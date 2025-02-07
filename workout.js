@@ -177,7 +177,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         try {
             const exercises = await exerciseService.getExercisesByCategory(type);
+            console.log('Fetched exercises:', exercises);
             if (!exercises || exercises.length === 0) {
+                console.log('No exercises found for category:', type);
                 const noExercises = document.createElement('option');
                 noExercises.disabled = true;
                 noExercises.textContent = 'No exercises found for this category';

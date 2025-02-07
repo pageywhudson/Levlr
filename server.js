@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth');
 const workoutRoutes = require('./routes/workouts');
 const achievementRoutes = require('./routes/achievements');
 const exerciseRoutes = require('./routes/exercises');
+const { seedExercises } = require('./seeds/exercises');
 
 const app = express();
 
@@ -28,9 +29,15 @@ app.options('*', cors());
 // Connect to MongoDB
 console.log('Attempting to connect to MongoDB...');
 mongoose.connect(process.env.MONGODB_URI)
-.then(() => {
+.then(async () => {
     console.log('Connected to MongoDB');
-    console.log('Database URL:', process.env.MONGODB_URI.replace(/:[^:]*@/, ':****@'));
+    console.log('Seeding exercises...');
+    const seeded = await seedExercises();
+    if (seeded) {
+        console.log('Successfully seeded exercises');
+    } else {
+        console.error('Failed to seed exercises');
+    }
 })
 .catch(err => {
     console.error('MongoDB connection error details:', {

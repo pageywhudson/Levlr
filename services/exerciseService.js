@@ -31,6 +31,10 @@ class ExerciseService {
                     'Authorization': `Bearer ${this.authService.getToken()}`
                 }
             });
+            if (!response.ok) {
+                console.error('Failed to fetch exercises:', await response.text());
+                return [];
+            }
             return await response.json();
         } catch (error) {
             console.error('Error fetching exercises by category:', error);

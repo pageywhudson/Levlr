@@ -19,6 +19,40 @@ const exercises = [
         ]
     },
     {
+        id: 'squat',
+        name: 'Squat',
+        description: 'A fundamental compound exercise that targets the legs and core.',
+        difficulty: 'Intermediate',
+        category: 'weightlifting',
+        type: 'popular',
+        muscles: ['Quadriceps', 'Hamstrings', 'Glutes', 'Core'],
+        recommendedReps: { min: 8, max: 12 },
+        tips: [
+            'Keep your chest up',
+            'Push your knees out',
+            'Keep your weight on your heels',
+            'Break parallel if possible',
+            'Breathe out as you stand'
+        ]
+    },
+    {
+        id: 'deadlift',
+        name: 'Deadlift',
+        description: 'A powerful compound exercise that builds overall strength.',
+        difficulty: 'Advanced',
+        category: 'weightlifting',
+        type: 'popular',
+        muscles: ['Lower Back', 'Hamstrings', 'Glutes', 'Traps'],
+        recommendedReps: { min: 5, max: 8 },
+        tips: [
+            'Keep your back straight',
+            'Push through your heels',
+            'Keep the bar close to your body',
+            'Engage your lats',
+            'Hinge at your hips'
+        ]
+    },
+    {
         id: 'push-ups',
         name: 'Push Ups',
         description: 'A compound bodyweight exercise targeting chest, shoulders, and triceps.',
@@ -257,9 +291,11 @@ async function seedExercises() {
         await Exercise.insertMany(exercises);
         
         console.log('Exercise database seeded successfully');
+        return true;
     } catch (error) {
         console.error('Error seeding exercise database:', error);
+        return false;
     }
 }
 
-module.exports = { seedExercises }; 
+module.exports = { seedExercises, exercises }; 
