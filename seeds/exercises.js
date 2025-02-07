@@ -116,64 +116,52 @@ const exercises = [
         ]
     },
     {
-        name: 'Squat',
-        category: 'Legs',
-        equipment: 'Barbell',
-        difficulty: 'Intermediate',
-        recommendedReps: { min: 5, max: 10 },
-        weightRanges: {
-            beginner: { min: 0.75, max: 1.0 },    // 75-100% of body weight
-            intermediate: { min: 1.0, max: 1.5 },  // 100-150% of body weight
-            advanced: { min: 1.5, max: 2.5 }       // 150-250% of body weight
-        },
-        description: 'Compound leg exercise that builds overall strength',
-        form: 'Bar on upper back, feet shoulder-width. Bend knees and hips to lower, keep chest up. Stand back up.',
-        muscles: ['Quadriceps', 'Hamstrings', 'Glutes', 'Core']
-    },
-    {
-        name: 'Deadlift',
-        category: 'Pull',
-        equipment: 'Barbell',
-        difficulty: 'Advanced',
-        recommendedReps: { min: 3, max: 8 },
-        weightRanges: {
-            beginner: { min: 1.0, max: 1.5 },     // 100-150% of body weight
-            intermediate: { min: 1.5, max: 2.0 },  // 150-200% of body weight
-            advanced: { min: 2.0, max: 3.0 }       // 200-300% of body weight
-        },
-        description: 'Full body pull exercise that builds overall strength',
-        form: 'Stand with bar over feet. Bend hips and knees to grip bar. Keep back straight, lift by extending hips and knees.',
-        muscles: ['Lower Back', 'Hamstrings', 'Glutes', 'Traps']
-    },
-    {
-        name: 'Pull-up',
-        category: 'Pull',
-        equipment: 'Bodyweight',
-        difficulty: 'Intermediate',
-        recommendedReps: { min: 4, max: 12 },
-        weightRanges: {
-            beginner: { min: 0, max: 0 },         // Bodyweight only
-            intermediate: { min: 0, max: 0.25 },   // Up to 25% BW added
-            advanced: { min: 0.25, max: 0.5 }      // 25-50% BW added
-        },
-        description: 'Upper body pulling exercise for back and biceps',
-        form: 'Hang from bar with hands wider than shoulders. Pull chest to bar by squeezing back muscles.',
-        muscles: ['Lats', 'Biceps', 'Upper Back']
-    },
-    {
+        id: 'overhead-press',
         name: 'Overhead Press',
-        category: 'Push',
-        equipment: 'Barbell',
+        description: 'A compound exercise targeting shoulders and triceps.',
         difficulty: 'Intermediate',
-        recommendedReps: { min: 5, max: 10 },
-        weightRanges: {
-            beginner: { min: 0.3, max: 0.5 },      // 30-50% of body weight
-            intermediate: { min: 0.5, max: 0.8 },   // 50-80% of body weight
-            advanced: { min: 0.8, max: 1.2 }        // 80-120% of body weight
-        },
-        description: 'Vertical pressing movement for shoulder strength',
-        form: 'Stand with bar at shoulders, press overhead while keeping core tight. Lock out arms at top.',
-        muscles: ['Shoulders', 'Triceps', 'Upper Chest']
+        category: 'weightlifting',
+        type: 'popular',
+        muscles: ['Shoulders', 'Triceps', 'Upper Back'],
+        recommendedReps: { min: 6, max: 12 },
+        tips: [
+            'Keep core tight',
+            'Don\'t lean back',
+            'Press straight up',
+            'Full range of motion'
+        ]
+    },
+    {
+        id: 'pull-ups',
+        name: 'Pull-ups',
+        description: 'A compound bodyweight exercise for back and biceps.',
+        difficulty: 'Intermediate',
+        category: 'bodyweight',
+        type: 'popular',
+        muscles: ['Back', 'Biceps', 'Shoulders'],
+        recommendedReps: { min: 5, max: 12 },
+        tips: [
+            'Full range of motion',
+            'Control the movement',
+            'Keep shoulders down',
+            'Engage your lats'
+        ]
+    },
+    {
+        id: 'running',
+        name: 'Running',
+        description: 'Cardiovascular exercise for endurance and health.',
+        difficulty: 'Intermediate',
+        category: 'cardio',
+        type: 'popular',
+        muscles: ['Legs', 'Heart', 'Core'],
+        recommendedReps: { min: 20, max: 60, unit: 'minutes' },
+        tips: [
+            'Start slow',
+            'Maintain good posture',
+            'Land midfoot',
+            'Breathe rhythmically'
+        ]
     },
     {
         name: 'Dumbbell Bench Press',
