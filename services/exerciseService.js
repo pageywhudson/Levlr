@@ -26,18 +26,38 @@ class ExerciseService {
 
     async getExercisesByCategory(category) {
         try {
+            console.log('Fetching exercises for category:', category);
+            const token = this.authService.getToken();
+            console.log('Auth token present:', !!token);
+            if (token) {
+                console.log('Token starts with:', token.substring(0, 10) + '...');
+            }
+            
             const response = await fetch(`${this.baseUrl}/exercises/category/${category}`, {
                 headers: {
-                    'Authorization': `Bearer ${this.authService.getToken()}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
             if (!response.ok) {
-                console.error('Failed to fetch exercises:', await response.text());
+                const errorText = await response.text();
+                console.error('Failed to fetch exercises:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    error: errorText,
+                    url: `${this.baseUrl}/exercises/category/${category}`
+                });
                 return [];
             }
-            return await response.json();
+            const exercises = await response.json();
+            console.log(`Found ${exercises.length} exercises for category:`, category);
+            return exercises;
         } catch (error) {
             console.error('Error fetching exercises by category:', error);
+            console.error('Error details:', {
+                message: error.message,
+                stack: error.stack,
+                url: `${this.baseUrl}/exercises/category/${category}`
+            });
             return [];
         }
     }

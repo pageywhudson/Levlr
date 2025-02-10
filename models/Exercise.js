@@ -49,4 +49,15 @@ const exerciseSchema = new mongoose.Schema({
     }]
 });
 
+// Add pre-save middleware for logging
+exerciseSchema.pre('save', function(next) {
+    console.log('Saving exercise:', this.id);
+    next();
+});
+
+// Add post-save middleware for verification
+exerciseSchema.post('save', function(doc) {
+    console.log('Saved exercise:', doc.id);
+});
+
 module.exports = mongoose.model('Exercise', exerciseSchema); 

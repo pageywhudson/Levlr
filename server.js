@@ -7,6 +7,7 @@ const workoutRoutes = require('./routes/workouts');
 const achievementRoutes = require('./routes/achievements');
 const exerciseRoutes = require('./routes/exercises');
 const { seedExercises } = require('./seeds/exercises');
+const Exercise = require('./models/Exercise');
 
 const app = express();
 
@@ -31,10 +32,18 @@ console.log('Attempting to connect to MongoDB...');
 mongoose.connect(process.env.MONGODB_URI)
 .then(async () => {
     console.log('Connected to MongoDB');
+    const db = mongoose.connection;
+    console.log('Database name:', db.name);
+    console.log('Collections:', await db.db.listCollections().toArray());
+    
     console.log('Seeding exercises...');
     const seeded = await seedExercises();
     if (seeded) {
         console.log('Successfully seeded exercises');
+        const count = await Exercise.countDocuments();
+        console.log('Number of exercises in database:', count);
+        const sample = await Exercise.findOne();
+        console.log('Sample exercise:', sample);
     } else {
         console.error('Failed to seed exercises');
     }

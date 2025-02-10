@@ -164,21 +164,6 @@ const exercises = [
         ]
     },
     {
-        name: 'Dumbbell Bench Press',
-        category: 'Push',
-        equipment: 'Dumbbell',
-        difficulty: 'Beginner',
-        recommendedReps: { min: 8, max: 12 },
-        weightRanges: {
-            beginner: { min: 0.1, max: 0.2 },      // 10-20% of body weight (per dumbbell)
-            intermediate: { min: 0.2, max: 0.3 },   // 20-30% of body weight (per dumbbell)
-            advanced: { min: 0.3, max: 0.45 }       // 30-45% of body weight (per dumbbell)
-        },
-        description: 'Dumbbell variation of bench press for balanced chest development',
-        form: 'Lie on bench, dumbbells at chest level. Press up while maintaining control.',
-        muscles: ['Chest', 'Triceps', 'Front Deltoids']
-    },
-    {
         name: 'Barbell Row',
         category: 'Pull',
         equipment: 'Barbell',
@@ -267,6 +252,51 @@ const exercises = [
         description: 'Rotational core exercise',
         form: 'Stand sideways to cable, rotate through core while keeping hips stable.',
         muscles: ['Obliques', 'Core', 'Shoulders']
+    },
+    {
+        id: 'cycling',
+        name: 'Cycling',
+        description: 'Low-impact cardiovascular exercise.',
+        difficulty: 'Beginner',
+        category: 'cardio',
+        type: 'popular',
+        muscles: ['Legs', 'Heart'],
+        recommendedReps: { min: 20, max: 60, unit: 'minutes' },
+        tips: [
+            'Maintain proper seat height',
+            'Keep a steady pace',
+            'Stay hydrated'
+        ]
+    },
+    {
+        id: 'dips',
+        name: 'Dips',
+        description: 'Upper body exercise for chest and triceps.',
+        difficulty: 'Intermediate',
+        category: 'bodyweight',
+        type: 'popular',
+        muscles: ['Chest', 'Triceps', 'Shoulders'],
+        recommendedReps: { min: 8, max: 15 },
+        tips: [
+            'Keep elbows close to body',
+            'Lower slowly and controlled',
+            'Full range of motion'
+        ]
+    },
+    {
+        id: 'lat-pulldown',
+        name: 'Lat Pulldown',
+        description: 'Machine exercise for back development.',
+        difficulty: 'Beginner',
+        category: 'weightlifting',
+        type: 'other',
+        muscles: ['Back', 'Biceps'],
+        recommendedReps: { min: 10, max: 15 },
+        tips: [
+            'Pull to upper chest',
+            'Keep chest up',
+            'Squeeze shoulder blades'
+        ]
     }
 ];
 
@@ -275,13 +305,30 @@ async function seedExercises() {
         // Clear existing exercises
         await Exercise.deleteMany({});
         
+        console.log('Attempting to seed exercises:', exercises.length);
+        
+        // Filter out exercises that don't match the schema
+        const validExercises = exercises.filter(exercise => 
+            exercise.id && 
+            exercise.name && 
+            exercise.description && 
+            ['weightlifting', 'bodyweight', 'cardio'].includes(exercise.category)
+        );
+        
+        console.log('Valid exercises to seed:', validExercises.length);
+        
         // Insert new exercises
-        await Exercise.insertMany(exercises);
+        await Exercise.insertMany(validExercises);
         
         console.log('Exercise database seeded successfully');
         return true;
     } catch (error) {
         console.error('Error seeding exercise database:', error);
+        if (error.errors) {
+            Object.keys(error.errors).forEach(key => {
+                console.error(`Validation error for ${key}:`, error.errors[key].message);
+            });
+        }
         return false;
     }
 }
