@@ -165,14 +165,23 @@ document.addEventListener('DOMContentLoaded', function() {
         // ... other exercises will be auto-generated as needed
     };
 
-    // Get DOM elements (add exerciseForm)
+    // Get DOM elements
     const typeButtons = document.querySelectorAll('.type-button');
     const exerciseSelect = document.getElementById('exercise');
     const formContainer = document.querySelector('.exercise-form-container');
     const searchInput = document.getElementById('exercise-search');
     
+    // Track current exercise type
+    let currentExerciseType = null;
+
     // Populate exercise select based on type
     async function populateExerciseSelect(type) {
+        // Prevent duplicate population if type hasn't changed
+        if (type === currentExerciseType) {
+            return;
+        }
+        currentExerciseType = type;
+        
         exerciseSelect.innerHTML = '<option value="">Select an exercise</option>';
         
         try {
@@ -279,35 +288,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Clear any existing event listeners from type buttons
+    // Handle exercise type selection
     typeButtons.forEach(button => {
-        const newButton = button.cloneNode(true);
-        button.parentNode.replaceChild(newButton, button);
-    });
-
-    // Get fresh references after replacing buttons
-    const newTypeButtons = document.querySelectorAll('.type-button');
-
-    // Add click handlers to type buttons
-    newTypeButtons.forEach(button => {
         button.addEventListener('click', function() {
-            // Update active state
-            newTypeButtons.forEach(btn => btn.classList.remove('active'));
+            // Remove active class from all buttons
+            typeButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
             this.classList.add('active');
-            
-            const selectedType = this.dataset.type;
-            
-            // Update exercise options
-            updateExerciseOptions(selectedType);
-            
-            // Update form fields
-            updateFormForExerciseType(selectedType);
+            // Update exercise list
+            populateExerciseSelect(this.dataset.type);
         });
     });
 
-    // Initialize with default type
-    const defaultType = document.querySelector('.type-button.active').dataset.type;
-    updateExerciseOptions(defaultType);
+    // Initial population - get the active button's type
+    const activeButton = document.querySelector('.type-button.active');
+    if (activeButton) {
+        populateExerciseSelect(activeButton.dataset.type);
+    }
 
     // Remove the conflicting exercise select change handler
     exerciseSelect.removeEventListener('change', exerciseSelect.changeHandler);
