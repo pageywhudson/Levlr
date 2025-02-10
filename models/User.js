@@ -44,6 +44,22 @@ const userSchema = new mongoose.Schema({
             type: Number,
             default: 0
         }
+    },
+    preferences: {
+        weightUnit: {
+            type: String,
+            enum: ['kg', 'lbs'],
+            default: 'kg'
+        },
+        distanceUnit: {
+            type: String,
+            enum: ['km', 'mi'],
+            default: 'km'
+        },
+        bodyWeight: {
+            type: Number,
+            default: 70
+        }
     }
 }, {
     timestamps: true

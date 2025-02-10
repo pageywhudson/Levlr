@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     const authService = new AuthService();
     
     // Check if user is authenticated
@@ -13,12 +13,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const weightUnitSpan = document.querySelector('.weight-unit');
     const saveBtn = document.querySelector('.save-btn');
 
-    // Load current preferences
-    const preferences = JSON.parse(localStorage.getItem('userPreferences')) || {
-        weightUnit: 'kg',
-        distanceUnit: 'km',
-        bodyWeight: 70
-    };
+    // Load current preferences from server, fallback to defaults
+    let preferences;
+    try {
+        preferences = await authService.getUserPreferences();
+    } catch (error) {
+        console.error('Error loading preferences:', error);
+        preferences = {
+            weightUnit: 'kg',
+            distanceUnit: 'km',
+            bodyWeight: 70
+        };
+    }
+    
+    // Keep local storage in sync
+    localStorage.setItem('userPreferences', JSON.stringify(preferences));
 
     // Initialize UI with current preferences
     function updateUI() {
@@ -39,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle unit button clicks
     toggleBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', async function() {
             const unit = this.dataset.unit;
             const isWeightUnit = ['kg', 'lbs'].includes(unit);
             
@@ -64,6 +73,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 bodyWeightInput.value = preferences.bodyWeight;
             } else {
                 preferences.distanceUnit = unit;
+            }
+
+            try {
+                // Save to server
+                await authService.saveUserPreferences(preferences);
+                // Update local storage
+                localStorage.setItem('userPreferences', JSON.stringify(preferences));
+                showNotification('Preferences updated successfully!', 'success');
+            } catch (error) {
+                console.error('Error saving preferences:', error);
+                showNotification('Failed to save preferences. Please try again.', 'error');
             }
         });
     });
@@ -123,6 +143,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update body weight
             preferences.bodyWeight = parseFloat(bodyWeightInput.value);
 
+            // Save preferences to server
+            await authService.saveUserPreferences(preferences);
+            
             // Save preferences to localStorage
             localStorage.setItem('userPreferences', JSON.stringify(preferences));
 
@@ -132,26 +155,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 preferences.weightUnit
             );
 
-            // Show success message
-            const successMessage = document.createElement('div');
-            successMessage.className = 'success-message';
-            successMessage.textContent = 'Settings saved successfully!';
-            document.body.appendChild(successMessage);
-
-            // Remove success message after 2 seconds
-            setTimeout(() => {
-                successMessage.remove();
-            }, 2000);
+            showNotification('Settings saved successfully!', 'success');
         } catch (error) {
-            // Show error message
-            const errorMessage = document.createElement('div');
-            errorMessage.className = 'error-message';
-            errorMessage.textContent = 'Failed to save settings. Please try again.';
-            document.body.appendChild(errorMessage);
-
-            setTimeout(() => {
-                errorMessage.remove();
-            }, 2000);
+            console.error('Error saving settings:', error);
+            showNotification('Failed to save settings. Please try again.', 'error');
         }
     });
 
