@@ -1,3 +1,8 @@
+const express = require('express');
+const router = express.Router();
+const User = require('../models/User');
+const auth = require('../middleware/auth');
+
 // GET user preferences
 router.get('/preferences', auth, async (req, res) => {
     try {
@@ -21,4 +26,6 @@ router.put('/preferences', auth, async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error updating preferences' });
     }
-}); 
+});
+
+module.exports = router; 

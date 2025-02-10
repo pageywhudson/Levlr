@@ -1,4 +1,9 @@
 class AuthService {
+    constructor() {
+        this.baseUrl = 'https://fitness-tracker-api-c4h0.onrender.com/api';
+        this.token = localStorage.getItem('token');
+    }
+
     // ... existing methods ...
 
     async saveUserPreferences(preferences) {
@@ -13,7 +18,8 @@ class AuthService {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to save preferences');
+                const error = await response.json();
+                throw new Error(error.message || 'Failed to save preferences');
             }
 
             return await response.json();
@@ -32,7 +38,8 @@ class AuthService {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to fetch preferences');
+                const error = await response.json();
+                throw new Error(error.message || 'Failed to fetch preferences');
             }
 
             return await response.json();
@@ -41,4 +48,6 @@ class AuthService {
             throw error;
         }
     }
+
+    // ... rest of existing methods ...
 } 

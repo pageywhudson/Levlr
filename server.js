@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth');
 const workoutRoutes = require('./routes/workouts');
 const achievementRoutes = require('./routes/achievements');
 const exerciseRoutes = require('./routes/exercises');
+const userRoutes = require('./routes/users');
 const { seedExercises } = require('./seeds/exercises');
 const Exercise = require('./models/Exercise');
 
@@ -76,6 +77,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/workouts', workoutRoutes);
 app.use('/api/achievements', achievementRoutes);
 app.use('/api/exercises', exerciseRoutes);
+app.use('/api/users', userRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
