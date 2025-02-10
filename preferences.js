@@ -68,6 +68,55 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Handle unit preference changes
+    document.querySelectorAll('input[name="weightUnit"]').forEach(input => {
+        input.addEventListener('change', async function() {
+            const newUnit = this.value;
+            const oldUnit = preferences.weightUnit;
+            
+            if (newUnit !== oldUnit) {
+                preferences.weightUnit = newUnit;
+                
+                // Convert existing weight if needed
+                if (preferences.bodyWeight) {
+                    preferences.bodyWeight = convertWeight(preferences.bodyWeight, oldUnit, newUnit);
+                }
+                
+                // Save preferences
+                localStorage.setItem('userPreferences', JSON.stringify(preferences));
+                
+                // Only save weight record if user weight exists
+                if (preferences.bodyWeight) {
+                    try {
+                        await authService.saveWeightRecord(preferences.bodyWeight, newUnit);
+                        showNotification('Weight unit updated successfully!', 'success');
+                    } catch (error) {
+                        console.error('Error saving weight record:', error);
+                        showNotification('Failed to update weight unit. Please try again.', 'error');
+                    }
+                } else {
+                    showNotification('Unit preferences updated!', 'success');
+                }
+            }
+        });
+    });
+
+    document.querySelectorAll('input[name="distanceUnit"]').forEach(input => {
+        input.addEventListener('change', function() {
+            const newUnit = this.value;
+            const oldUnit = preferences.distanceUnit;
+            
+            if (newUnit !== oldUnit) {
+                preferences.distanceUnit = newUnit;
+                
+                // Save preferences
+                localStorage.setItem('userPreferences', JSON.stringify(preferences));
+                
+                showNotification('Distance unit updated successfully!', 'success');
+            }
+        });
+    });
+
     // Handle save button click
     saveBtn.addEventListener('click', async function() {
         try {
