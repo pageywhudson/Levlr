@@ -297,6 +297,8 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.add('active');
             // Update exercise list
             populateExerciseSelect(this.dataset.type);
+            // Update form fields for the selected type
+            updateFormFields(this.dataset.type);
         });
     });
 
@@ -414,84 +416,57 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Update the updateFormFields function to handle bodyweight template
     function updateFormFields(type) {
-        const formGroups = formContainer.querySelectorAll('.form-group');
-        const setInputs = formContainer.querySelector('.set-inputs');
-        const addSetButton = formContainer.querySelector('.add-set-button');
-        const exerciseInfo = formContainer.querySelector('#exercise-info').parentElement;
-
-        // Remove existing form fields after the exercise select, except exercise info
-        formGroups.forEach(group => {
-            if (group.querySelector('#exercise') === null && 
-                group.querySelector('#exercise-info') === null) {
-                group.remove();
+        const setInputs = document.querySelector('.set-inputs');
+        const setContainers = setInputs.querySelectorAll('.set-container');
+        
+        setContainers.forEach((container, index) => {
+            const setNumber = index + 1;
+            const setDetails = container.querySelector('.set-details');
+            
+            switch(type) {
+                case 'cardio':
+                    setDetails.innerHTML = `
+                        <div class="form-group">
+                            <label for="duration-${setNumber}">Duration (minutes)</label>
+                            <input type="number" id="duration-${setNumber}" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="distance-${setNumber}">Distance (${preferences.distanceUnit})</label>
+                            <input type="number" id="distance-${setNumber}" min="0" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="intensity-${setNumber}">Intensity</label>
+                            <select id="intensity-${setNumber}" required>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    `;
+                    break;
+                case 'bodyweight':
+                    setDetails.innerHTML = `
+                        <div class="form-group">
+                            <label for="reps-${setNumber}">Reps</label>
+                            <input type="number" id="reps-${setNumber}" min="1" required>
+                        </div>
+                    `;
+                    break;
+                case 'weightlifting':
+                default:
+                    setDetails.innerHTML = `
+                        <div class="form-group">
+                            <label for="weight-${setNumber}">Weight (${currentUnit})</label>
+                            <input type="number" id="weight-${setNumber}" min="0" step="${currentUnit === 'kg' ? '1' : '0.5'}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reps-${setNumber}">Reps</label>
+                            <input type="number" id="reps-${setNumber}" min="1" required>
+                        </div>
+                    `;
+                    break;
             }
         });
-
-        if (setInputs) setInputs.remove();
-        if (addSetButton) addSetButton.remove();
-
-        // Add new form fields based on type
-        if (type === 'bodyweight') {
-            const template = document.getElementById('bodyweight-form');
-            const newFields = template.content.cloneNode(true);
-            
-            // Update the added weight label and input with current unit preferences
-            const weightLabel = newFields.querySelector('label[for="added-weight"]');
-            const weightInput = newFields.querySelector('#added-weight');
-            
-            weightLabel.textContent = `Added Weight (${currentUnit}, optional)`;
-            weightInput.step = currentUnit === 'kg' ? '1' : '2.5';
-
-            // Insert new fields
-            if (exerciseInfo) {
-                formContainer.insertBefore(newFields, exerciseInfo);
-            } else {
-                formContainer.insertBefore(newFields, formContainer.querySelector('.submit-button'));
-            }
-        } else {
-            const template = document.getElementById(`${type}-form`);
-            if (template) {
-                const newFields = template.content.cloneNode(true);
-                // Insert new fields before the exercise info if it exists
-                if (exerciseInfo) {
-                    formContainer.insertBefore(newFields, exerciseInfo);
-                } else {
-                    formContainer.insertBefore(newFields, formContainer.querySelector('.submit-button'));
-                }
-            } else if (type === 'weightlifting') {
-                const setInputsHTML = `
-                    <div class="set-inputs">
-                        <h3>Set Details</h3>
-                        <div class="set-container">
-                            <div class="set-header">
-                                <span>Set 1</span>
-                                <button type="button" class="remove-set">×</button>
-                            </div>
-                            <div class="set-details">
-                                <div class="form-group">
-                                    <label for="weight-1">Weight (${currentUnit})</label>
-                                    <input type="number" id="weight-1" min="0" step="${currentUnit === 'kg' ? '1' : '2.5'}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="reps-1">Reps</label>
-                                    <input type="number" id="reps-1" min="1" required>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button" class="add-set-button">+ Add Another Set</button>
-                `;
-
-                const setInputsElement = createElementFromHTML(setInputsHTML);
-                
-                // Insert the element
-                if (exerciseInfo) {
-                    formContainer.insertBefore(setInputsElement, exerciseInfo);
-                } else {
-                    formContainer.insertBefore(setInputsElement, formContainer.querySelector('.submit-button'));
-                }
-            }
-        }
     }
 
     // Helper function to create element from HTML string
@@ -773,7 +748,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Update the add set button handler to include unit toggle functionality
+    // Update the add set button handler
     formContainer.addEventListener('click', function(e) {
         if (e.target.classList.contains('add-set-button')) {
             const setInputs = formContainer.querySelector('.set-inputs');
@@ -783,33 +758,19 @@ document.addEventListener('DOMContentLoaded', function() {
             newSetContainer.className = 'set-container';
             newSetContainer.dataset.setNumber = setCount;
             
-            const selectedType = document.querySelector('.type-button.active').dataset.type;
-            
             newSetContainer.innerHTML = `
                 <div class="set-header">
                     <span>Set ${setCount}</span>
                     <button type="button" class="remove-set">×</button>
                 </div>
                 <div class="set-details">
-                    ${selectedType === 'bodyweight' ? `
-                        <div class="form-group">
-                            <label for="reps-${setCount}">Reps</label>
-                            <input type="number" id="reps-${setCount}" min="1" required>
-                        </div>
-                    ` : `
-                        <div class="form-group">
-                            <label for="weight-${setCount}">Weight (${currentUnit})</label>
-                            <input type="number" id="weight-${setCount}" min="0" step="${currentUnit === 'kg' ? '1' : '0.5'}" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="reps-${setCount}">Reps</label>
-                            <input type="number" id="reps-${setCount}" min="1" required>
-                        </div>
-                    `}
                 </div>
             `;
 
             setInputs.appendChild(newSetContainer);
+            // Update the fields for the new set
+            const selectedType = document.querySelector('.type-button.active').dataset.type;
+            updateFormFields(selectedType);
         }
     });
 
@@ -821,26 +782,37 @@ document.addEventListener('DOMContentLoaded', function() {
             const exerciseSelect = document.getElementById('exercise');
             const selectedExercise = exerciseSelect.value;
             const notes = document.getElementById('notes').value;
+            const exercise = await exerciseService.getExerciseById(selectedExercise);
             
             // Collect all sets data
             const setContainers = document.querySelectorAll('.set-container');
             const sets = Array.from(setContainers).map((container, index) => {
                 const setNumber = index + 1;
-                const weight = document.getElementById(`weight-${setNumber}`)?.value || 0;
-                const reps = document.getElementById(`reps-${setNumber}`)?.value || 0;
+                const set = {};
                 
-                return {
-                    weight: {
-                        value: parseFloat(weight),
-                        unit: preferences.weightUnit
-                    },
-                    reps: parseInt(reps),
-                    completed: true
-                };
+                switch(exercise.category) {
+                    case 'cardio':
+                        set.duration = parseInt(document.getElementById(`duration-${setNumber}`).value);
+                        set.distance = parseFloat(document.getElementById(`distance-${setNumber}`).value);
+                        set.intensity = document.getElementById(`intensity-${setNumber}`).value;
+                        break;
+                    case 'bodyweight':
+                        set.reps = parseInt(document.getElementById(`reps-${setNumber}`).value);
+                        break;
+                    case 'weightlifting':
+                        set.weight = {
+                            value: parseFloat(document.getElementById(`weight-${setNumber}`).value),
+                            unit: preferences.weightUnit
+                        };
+                        set.reps = parseInt(document.getElementById(`reps-${setNumber}`).value);
+                        break;
+                }
+                
+                set.completed = true;
+                return set;
             });
 
             // Get exercise details
-            const exercise = await exerciseService.getExerciseById(selectedExercise);
             const workoutData = {
                 exercises: [{
                     name: exercise.name,
