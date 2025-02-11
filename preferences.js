@@ -14,14 +14,27 @@ document.addEventListener('DOMContentLoaded', async function() {
     console.log('AuthService methods:', Object.getOwnPropertyNames(AuthService.prototype));
     console.log('authService instance methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(authService)));
     
+    // Get the stored user data
+    const userData = localStorage.getItem('userData');
+    console.log('Stored user data:', userData ? 'exists' : 'not found');
+    
     // Check if user is authenticated
     if (!authService.isAuthenticated()) {
         console.log('User not authenticated, redirecting to login');
+        // Save the current page as the redirect destination
+        localStorage.setItem('redirectAfterLogin', 'preferences.html');
         window.location.href = 'index.html';
         return;
     }
 
     try {
+        // Verify we have a valid token
+        const token = authService.getToken();
+        if (!token) {
+            throw new Error('No authentication token found');
+        }
+        console.log('Using token:', token.substring(0, 10) + '...');
+
         // Get elements
         const toggleBtns = document.querySelectorAll('.toggle-btn');
         const bodyWeightInput = document.getElementById('bodyWeight');

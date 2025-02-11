@@ -8,11 +8,30 @@ class AuthService {
     }
 
     isAuthenticated() {
-        return !!this.getToken();
+        const token = this.getToken();
+        console.log('Checking authentication. Token exists:', !!token);
+        if (token) {
+            // Basic JWT validation (check if expired)
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                const isValid = payload.exp > Date.now() / 1000;
+                console.log('Token validation:', {
+                    expires: new Date(payload.exp * 1000),
+                    isValid
+                });
+                return isValid;
+            } catch (error) {
+                console.error('Token validation error:', error);
+                return false;
+            }
+        }
+        return false;
     }
 
     getToken() {
-        return localStorage.getItem('token');
+        const token = localStorage.getItem('token');
+        console.log('Getting token from localStorage:', token ? token.substring(0, 10) + '...' : 'no token');
+        return token;
     }
 
     setToken(token) {
@@ -22,6 +41,7 @@ class AuthService {
 
     async login(username, password) {
         try {
+            console.log('Attempting login for user:', username);
             const response = await fetch(`${this.baseUrl}/auth/login`, {
                 method: 'POST',
                 headers: {
@@ -31,6 +51,11 @@ class AuthService {
             });
 
             const data = await response.json();
+            console.log('Login response:', {
+                status: response.status,
+                ok: response.ok,
+                hasToken: !!data.token
+            });
 
             if (!response.ok) {
                 throw new Error(data.message || 'Login failed');
@@ -38,6 +63,7 @@ class AuthService {
 
             this.setToken(data.token);
             localStorage.setItem('userData', JSON.stringify(data.user));
+            console.log('Login successful, token saved');
             return data;
         } catch (error) {
             console.error('Login error:', error);
