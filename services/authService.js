@@ -2,6 +2,9 @@ class AuthService {
     constructor() {
         this.baseUrl = 'https://fitness-tracker-api-c4h0.onrender.com/api';
         this.token = localStorage.getItem('token');
+        // Test that the class is properly defined
+        console.log('AuthService initialized with methods:', 
+            Object.getOwnPropertyNames(Object.getPrototypeOf(this)));
     }
 
     isAuthenticated() {
@@ -157,4 +160,14 @@ class AuthService {
             throw error;
         }
     }
+}
+
+// Make sure AuthService is available globally
+if (typeof window !== 'undefined') {
+    window.AuthService = AuthService;
+}
+
+// Also export for module systems
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = AuthService;
 } 

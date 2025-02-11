@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', async function() {
     const authService = new AuthService();
+    console.log('AuthService methods:', Object.getOwnPropertyNames(AuthService.prototype));
+    console.log('authService instance methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(authService)));
     
     // Check if user is authenticated
     if (!authService.isAuthenticated()) {
@@ -16,6 +18,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Load current preferences from server, fallback to defaults
     let preferences;
     try {
+        console.log('Attempting to get user preferences...');
+        console.log('AuthService instance:', authService);
         preferences = await authService.getUserPreferences();
     } catch (error) {
         console.error('Error loading preferences:', error);
