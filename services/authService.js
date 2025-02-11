@@ -4,7 +4,95 @@ class AuthService {
         this.token = localStorage.getItem('token');
     }
 
-    // ... existing methods ...
+    isAuthenticated() {
+        return !!this.getToken();
+    }
+
+    getToken() {
+        return localStorage.getItem('token');
+    }
+
+    setToken(token) {
+        localStorage.setItem('token', token);
+        this.token = token;
+    }
+
+    async login(username, password) {
+        try {
+            const response = await fetch(`${this.baseUrl}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Login failed');
+            }
+
+            this.setToken(data.token);
+            localStorage.setItem('userData', JSON.stringify(data.user));
+            return data;
+        } catch (error) {
+            console.error('Login error:', error);
+            throw error;
+        }
+    }
+
+    logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userData');
+        localStorage.removeItem('workoutHistory');
+        this.token = null;
+    }
+
+    async register(userData) {
+        try {
+            const response = await fetch(`${this.baseUrl}/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Registration failed');
+            }
+
+            return data;
+        } catch (error) {
+            console.error('Registration error:', error);
+            throw error;
+        }
+    }
+
+    async saveWeightRecord(weight, unit) {
+        try {
+            const response = await fetch(`${this.baseUrl}/users/weight`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.getToken()}`
+                },
+                body: JSON.stringify({ weight, unit })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save weight record');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error saving weight record:', error);
+            throw error;
+        }
+    }
 
     async saveUserPreferences(preferences) {
         try {
@@ -49,5 +137,24 @@ class AuthService {
         }
     }
 
-    // ... rest of existing methods ...
+    async fetchUserWorkoutHistory() {
+        try {
+            const response = await fetch(`${this.baseUrl}/workouts`, {
+                headers: {
+                    'Authorization': `Bearer ${this.getToken()}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch workout history');
+            }
+
+            const workouts = await response.json();
+            localStorage.setItem('workoutHistory', JSON.stringify(workouts));
+            return workouts;
+        } catch (error) {
+            console.error('Error fetching workout history:', error);
+            throw error;
+        }
+    }
 } 
