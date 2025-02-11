@@ -28,6 +28,17 @@ app.use(express.static('./'));
 // Handle CORS preflight requests
 app.options('*', cors());
 
+// Debug middleware for user routes
+app.use('/api/users/*', (req, res, next) => {
+    console.log('User route accessed:', {
+        method: req.method,
+        path: req.path,
+        headers: req.headers,
+        body: req.body
+    });
+    next();
+});
+
 // Connect to MongoDB
 console.log('Attempting to connect to MongoDB...');
 mongoose.connect(process.env.MONGODB_URI)

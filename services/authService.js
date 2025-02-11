@@ -122,18 +122,28 @@ class AuthService {
 
     async getUserPreferences() {
         try {
+            const token = this.getToken();
+            if (!token) {
+                throw new Error('No authentication token found');
+            }
+
+            console.log('Fetching preferences with token:', token.substring(0, 10) + '...');
             const response = await fetch(`${this.baseUrl}/users/preferences`, {
                 headers: {
-                    'Authorization': `Bearer ${this.getToken()}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
 
+            console.log('Preferences response status:', response.status);
             if (!response.ok) {
                 const error = await response.json();
+                console.error('Server error response:', error);
                 throw new Error(error.message || 'Failed to fetch preferences');
             }
 
-            return await response.json();
+            const data = await response.json();
+            console.log('Received preferences data:', data);
+            return data;
         } catch (error) {
             console.error('Error fetching preferences:', error);
             throw error;
